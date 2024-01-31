@@ -1,18 +1,11 @@
 #pragma once
 
 #include <Graphics/ApplicationWindow.h>
-#include <AnimatedObject.h>
-#include <AnimationSystem.h>
+
 
 class AnimationApplication : public ApplicationWindow
 {
 public:
-
-	std::vector<AnimatedObject*> listOfAnimatedObjects;
-
-
-	void HandlePreviousClip();
-	void HandleNextClip();
 
 	// Inherited via ApplicationWindow
 	void SetUp() override;

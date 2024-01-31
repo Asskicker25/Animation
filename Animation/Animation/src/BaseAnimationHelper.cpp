@@ -24,6 +24,22 @@ void BaseAnimationHelper::SetCurrentAnimationClip(int index)
 	currentAnimationIndex = index;
 }
 
+void BaseAnimationHelper::SetCurrentAnimationClip(AnimationClip* clip)
+{
+	for (int i = 0; i < listOfAnimationClips.size(); i++)
+	{
+		if (clip == listOfAnimationClips[i])
+		{
+			currentAnimationIndex = i;
+			return;
+		}
+	}
+
+	listOfAnimationClips.push_back(clip);
+	currentAnimationIndex = listOfAnimationClips.size() - 1;
+} 
+
+
 
 int BaseAnimationHelper::GetCurrentAnimationIndex()
 {

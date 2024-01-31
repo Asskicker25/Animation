@@ -2,6 +2,7 @@
 #include <vector>
 #include <functional>
 #include "AnimatedObject.h"
+#include "AnimationSequence.h"
 
 class AnimationSystem
 {
@@ -15,7 +16,7 @@ public:
 	void UpdateAnimations(float deltaTime);
 	void TogglePlayAndPause();
 
-	double animationTime = 0;
+	AnimationSequence* currentSequence;
 
 	float animationSpeed = 1;
 

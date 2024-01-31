@@ -23,15 +23,13 @@ void AnimationSystem::UpdateAnimations(float deltaTime)
 {
 	if (!isPlaying) return;
 
-	animationTime += deltaTime * animationSpeed;
-
-	if (animationTime < 0) { animationTime = 0; }
+	currentSequence->CalculateTime(deltaTime * animationSpeed);
 
 	for (BaseAnimationHelper* animObject : listOfAnimatedObjects)
 	{
 		if (!animObject->IsAnimationAvailable()) continue;
 
-		animObject->GetCurrentAnimationClip()->time = animationTime;
+		animObject->GetCurrentAnimationClip()->time = currentSequence->GetCurrentTime();
 		HandleAnimation(animObject);
 	}
 }

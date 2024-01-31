@@ -17,6 +17,7 @@ public:
 	void RemoveAnimationClip(AnimationClip* clip);
 
 	void SetCurrentAnimationClip(int index = 0);
+	void SetCurrentAnimationClip(AnimationClip* clip);
 
 	AnimationClip* GetCurrentAnimationClip();
 	int GetCurrentAnimationIndex();
