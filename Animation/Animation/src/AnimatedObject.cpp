@@ -30,3 +30,11 @@ void AnimatedObject::SetAnimatedScale(const glm::vec3& scale)
 {
 	transform.SetScale(scale);
 }
+
+void AnimatedObject::SetBaseColor(const glm::vec4& color)
+{
+	for (MeshAndMaterial* mesh : meshes)
+	{
+		mesh->material->AsMaterial()->SetBaseColor(color);
+	}
+}

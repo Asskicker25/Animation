@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\KeyFrameEvent.h" />
     <ClInclude Include="src\AnimationSequence.h" />
     <ClInclude Include="src\BaseKeyFrame.h" />
     <ClInclude Include="src\AnimatedObject.h" />
@@ -27,6 +28,7 @@
     <ClInclude Include="src\BaseAnimationHelper.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\KeyFrameEvent.cpp" />
     <ClCompile Include="src\AnimationSequence.cpp" />
     <ClCompile Include="src\AnimatedObject.cpp" />
     <ClCompile Include="src\AnimationSystem.cpp" />

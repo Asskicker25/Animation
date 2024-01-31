@@ -24,6 +24,19 @@ void AnimationClip::AddKeyFrame(const glm::vec3& value, float time, EasingType e
 	}
 }
 
+void AnimationClip::AddKeyFrameEvent(KeyFrameEvent* keyframeEvent)
+{
+	listOfKeyFrameEvents.push_back(keyframeEvent);
+}
+
+void AnimationClip::ResetKeyFrameTrigger()
+{
+	for (KeyFrameEvent* keyFrameEvent : listOfKeyFrameEvents)
+	{
+		keyFrameEvent->isEventTriggered = false;
+	}
+}
+
 void AnimationClip::SetCurrentKeyType(KeyFrameType keyType)
 {
 	currentKeyType = keyType;

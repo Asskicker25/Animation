@@ -43,6 +43,7 @@ void AnimationSequenceManager::OnKeyPressed(const int& key)
 	}
 	else if (key == GLFW_KEY_R)
 	{
+		OnReset(currentSequenceIndex);
 		GetCurrentSequence()->sequenceState = GetCurrentSequence()->sequenceState == REVERSE ? NORMAL : REVERSE;
 	}
 }
@@ -89,4 +90,5 @@ void AnimationSequenceManager::HandleSequenceStart()
 	GetCurrentSequence()->Reset();
 	AnimationSystem::GetInstance().currentSequence = GetCurrentSequence();
 	OnSequenceChange(currentSequenceIndex);
+	OnReset(currentSequenceIndex);
 }

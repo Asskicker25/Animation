@@ -2,7 +2,7 @@
 
 #include <glm/glm.hpp>
 
-enum class EasingType
+enum EasingType
 {
 	Linear,
 	SineEaseIn,

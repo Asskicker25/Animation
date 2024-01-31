@@ -10,6 +10,7 @@ class AnimationSequenceManager : public iInputListener
 public:
 
 	std::function<void(int)> OnSequenceChange = nullptr;
+	std::function<void(int)> OnReset = nullptr;
 
 	void Initialize();
 	AnimationSequenceManager();

@@ -21,5 +21,6 @@ public:
 	void OnDestroy() override;
 
 	void OnSequenceChange(int index);
+	void OnSequenceReset(int index);
 };
 

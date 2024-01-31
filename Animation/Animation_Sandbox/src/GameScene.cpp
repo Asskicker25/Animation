@@ -11,7 +11,7 @@ GameScene::GameScene()
 
 	clip1->SetCurrentKeyType(POSITION);
 	clip1->AddKeyFrame(glm::vec3(0, 0, 0), 0);
-	clip1->AddKeyFrame(glm::vec3(0, 3, 0), 3, EasingType::Linear);
+	clip1->AddKeyFrame(glm::vec3(0, 3, 0), 3, SineEaseIn);
 
 	clip1->SetCurrentKeyType(ROTATION);
 	clip1->AddKeyFrame(glm::vec3(0, 0, 0), 0);
@@ -22,11 +22,16 @@ GameScene::GameScene()
 	clip1->AddKeyFrame(glm::vec3(1.2f, 1.2f, 1.2f), 1.5f);
 	clip1->AddKeyFrame(glm::vec3(1, 1, 1), 3.0f);
 
+	clip1->AddKeyFrameEvent(new KeyFrameEvent(1.5f, []()
+		{
+			std::cout << "Event Triggered " << std::endl;
+		}));
+
 	AnimationClip* clip2 = new AnimationClip();
 
 	clip2->SetCurrentKeyType(POSITION);
 	clip2->AddKeyFrame(glm::vec3(0, 3, 0), 0);
-	clip2->AddKeyFrame(glm::vec3(3, 0, 0), 3);
+	clip2->AddKeyFrame(glm::vec3(3, 0, 0), 3, SineEaseInOut);
 
 	clip2->SetCurrentKeyType(ROTATION);
 	clip2->AddKeyFrame(glm::vec3(40, 90, 0), 0);
@@ -45,7 +50,7 @@ GameScene::GameScene()
 
 	clip3->SetCurrentKeyType(POSITION);
 	clip3->AddKeyFrame(glm::vec3(-5, 0, 0), 0);
-	clip3->AddKeyFrame(glm::vec3(-5, 1, 0), 1, EasingType::SineEaseIn);
+	clip3->AddKeyFrame(glm::vec3(-5, 1, 0), 1, SineEaseOut);
 
 	clip3->SetCurrentKeyType(ROTATION);
 	clip3->AddKeyFrame(glm::vec3(0, 0, 0), 0);
@@ -91,6 +96,11 @@ GameScene::GameScene()
 			OnSequenceChange(value);
 		};
 
+	sequenceManager->OnReset = [this](int value)
+		{
+			OnSequenceReset(value);
+		};
+
 	sequenceManager->Initialize();
 }
 
@@ -111,5 +121,13 @@ void GameScene::OnSequenceChange(int index)
 	for (AnimatedObject* obj : listOfAnimatedObjects)
 	{
 		obj->SetCurrentAnimationClip(index);
+	}
+}
+
+void GameScene::OnSequenceReset(int index)
+{
+	for (AnimatedObject* obj : listOfAnimatedObjects)
+	{
+		obj->GetCurrentAnimationClip()->ResetKeyFrameTrigger();
 	}
 }

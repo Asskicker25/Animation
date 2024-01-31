@@ -31,6 +31,7 @@ void AnimationSystem::UpdateAnimations(float deltaTime)
 
 		animObject->GetCurrentAnimationClip()->time = currentSequence->GetCurrentTime();
 		HandleAnimation(animObject);
+		HandleEventInvoke(animObject);
 	}
 }
 
@@ -46,6 +47,10 @@ void AnimationSystem::HandleAnimation(BaseAnimationHelper* animObject)
 	HandleKeyFrames_Vector3(animationClip->time, animationClip->listOfPositionKeyFrames, [animObject](glm::vec3 value)
 		{
 			animObject->SetAnimatedPosition(value);
+		}, 
+		[animObject](glm::vec4 color)
+			{
+			animObject->SetBaseColor(color);
 		});
 	HandleKeyFrames_Quaternion(animationClip->time, animationClip->listOfRotationKeyFrames, [animObject](glm::quat value)
 		{
@@ -58,14 +63,48 @@ void AnimationSystem::HandleAnimation(BaseAnimationHelper* animObject)
 		});
 }
 
+void AnimationSystem::HandleEventInvoke(BaseAnimationHelper* animObject)
+{
+	AnimationClip* clip = animObject->GetCurrentAnimationClip();
+
+	for (KeyFrameEvent* keyFrameEvent : clip->listOfKeyFrameEvents)
+	{
+		if (keyFrameEvent->isEventTriggered) continue;
+
+		switch (currentSequence->sequenceState)
+		{
+		case NORMAL:
+
+			if (clip->time >= keyFrameEvent->eventTime)
+			{
+				if(keyFrameEvent->OnEventTrigger != nullptr) { keyFrameEvent->OnEventTrigger(); }
+
+				keyFrameEvent->isEventTriggered = true;
+			}
+
+			break;
+		case REVERSE:
+
+			if (clip->time <= keyFrameEvent->eventTime)
+			{
+				if (keyFrameEvent->OnEventTrigger != nullptr) { keyFrameEvent->OnEventTrigger(); }
+				keyFrameEvent->isEventTriggered = true;
+			}
+
+			break;
+		}
+	}
+}
+
 void AnimationSystem::HandleKeyFrames_Vector3(double time, std::vector<BaseKeyFrame<glm::vec3>>& keyFrames, 
-	std::function<void(glm::vec3)> OnValueApply)
+	std::function<void(glm::vec3)> OnValueApply, std::function<void(glm::vec4)>OnColorChange)
 {
 	if (keyFrames.size() == 0) return;
 
 	if (keyFrames.size() == 1)
 	{
 		OnValueApply(keyFrames[0].mValue);
+		if (OnColorChange != nullptr) { OnColorChange(glm::vec4(1)); }
 		return;
 	}
 
@@ -81,6 +120,8 @@ void AnimationSystem::HandleKeyFrames_Vector3(double time, std::vector<BaseKeyFr
 	if (keyFrameEndIndex >= keyFrames.size())
 	{
 		OnValueApply(keyFrames[keyFrameEndIndex-1].mValue);
+
+		if (OnColorChange != nullptr) { OnColorChange(glm::vec4(1)); }
 		return;
 	}
 
@@ -97,18 +138,29 @@ void AnimationSystem::HandleKeyFrames_Vector3(double time, std::vector<BaseKeyFr
 	{
 	case EasingType::Linear:
 		result = percent;
+
+		if (OnColorChange != nullptr) { OnColorChange(glm::vec4(1)); }
+
 		break;
 
 	case EasingType::SineEaseIn:
 		result = glm::sineEaseIn(percent);
+
+		if (OnColorChange != nullptr) { OnColorChange(glm::vec4(0.7f, 0, 0, 1)); }
+		
 		break;
 
 	case EasingType::SineEaseOut: 
 		result = glm::sineEaseOut(percent);
+
+		if (OnColorChange != nullptr) { OnColorChange(glm::vec4(1.0f, 1.0f, 0, 1)); }
+		
 		break;
 
 	case EasingType::SineEaseInOut:
 		result = glm::sineEaseInOut(percent);
+		if (OnColorChange != nullptr) { OnColorChange(glm::vec4(0, 0.7f, 0, 1)); }
+	
 		break;
 
 	}
@@ -119,7 +171,7 @@ void AnimationSystem::HandleKeyFrames_Vector3(double time, std::vector<BaseKeyFr
 }
 
 void AnimationSystem::HandleKeyFrames_Quaternion(double time, std::vector<BaseKeyFrame<glm::vec3>>& keyFrames,
-	std::function<void(glm::quat)> OnValueApply)
+	std::function<void(glm::quat)> OnValueApply, std::function<void(glm::vec4)>OnColorChange)
 {
 	if (keyFrames.size() == 0) return;
 
@@ -159,6 +211,7 @@ void AnimationSystem::HandleKeyFrames_Quaternion(double time, std::vector<BaseKe
 	{
 	case EasingType::Linear:
 		result = percent;
+
 		break;
 
 	case EasingType::SineEaseIn:

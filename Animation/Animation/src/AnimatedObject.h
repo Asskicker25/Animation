@@ -16,5 +16,9 @@ public:
 	void SetAnimatedRotation(const glm::quat& rotation) override;
 	void SetAnimatedScale(const glm::vec3& scale) override;
 
+
+	// Inherited via BaseAnimationHelper
+	void SetBaseColor(const glm::vec4& color) override;
+
 };
 
