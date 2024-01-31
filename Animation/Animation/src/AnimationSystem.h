@@ -17,6 +17,8 @@ public:
 
 	double animationTime = 0;
 
+	float animationSpeed = 1;
+
 private:
 
 	void HandleAnimation(BaseAnimationHelper* animObject);

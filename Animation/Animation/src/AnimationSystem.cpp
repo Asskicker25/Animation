@@ -23,7 +23,7 @@ void AnimationSystem::UpdateAnimations(float deltaTime)
 {
 	if (!isPlaying) return;
 
-	animationTime += deltaTime;
+	animationTime += deltaTime * animationSpeed;
 
 	for (BaseAnimationHelper* animObject : listOfAnimatedObjects)
 	{
