@@ -10,6 +10,7 @@ public:
 
 	virtual void SetAnimatedPosition(const glm::vec3& position) = 0;
 	virtual void SetAnimatedRotation(const glm::vec3& rotation) = 0;
+	virtual void SetAnimatedRotation(const glm::quat& rotation) = 0;
 	virtual void SetAnimatedScale(const glm::vec3& scale) = 0;
 
 	void AddAnimationClip(AnimationClip* clip);

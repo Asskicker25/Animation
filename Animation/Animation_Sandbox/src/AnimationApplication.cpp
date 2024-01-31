@@ -14,26 +14,26 @@ void AnimationApplication::SetUp()
 
 	clip1->SetCurrentKeyType(POSITION);
 	clip1->AddKeyFrame(glm::vec3(0,0,0), 0);
-	clip1->AddKeyFrame(glm::vec3(0,3,0), 1, EasingType::Linear);
+	clip1->AddKeyFrame(glm::vec3(0,3,0), 3, EasingType::Linear);
 
 	clip1->SetCurrentKeyType(ROTATION);
 	clip1->AddKeyFrame(glm::vec3(0, 0, 0), 0);
-	clip1->AddKeyFrame(glm::vec3(40, 90, 0), 1);
+	clip1->AddKeyFrame(glm::vec3(40, 90, 0), 3);
 
 	clip1->SetCurrentKeyType(SCALE);
 	clip1->AddKeyFrame(glm::vec3(1, 1, 1), 0);
-	clip1->AddKeyFrame(glm::vec3(1.2f, 1.2f, 1.2f), 0.5f);
-	clip1->AddKeyFrame(glm::vec3(1, 1, 1), 1.0f);
+	clip1->AddKeyFrame(glm::vec3(1.2f, 1.2f, 1.2f), 1.5f);
+	clip1->AddKeyFrame(glm::vec3(1, 1, 1), 3.0f);
 
 	AnimationClip* clip2 = new AnimationClip();
 
 	clip2->SetCurrentKeyType(POSITION);
 	clip2->AddKeyFrame(glm::vec3(0, 3, 0), 0);
-	clip2->AddKeyFrame(glm::vec3(3, 0, 0), 1);
+	clip2->AddKeyFrame(glm::vec3(3, 0, 0), 3);
 
 	clip2->SetCurrentKeyType(ROTATION);
 	clip2->AddKeyFrame(glm::vec3(40, 90, 0), 0);
-	clip2->AddKeyFrame(glm::vec3(0, 0, 0), 1);
+	clip2->AddKeyFrame(glm::vec3(0, 0, 0), 3);
 
 
 	AnimatedObject* model = new AnimatedObject();
@@ -46,7 +46,7 @@ void AnimationApplication::SetUp()
 
 	clip3->SetCurrentKeyType(POSITION);
 	clip3->AddKeyFrame(glm::vec3(-5, 0, 0), 0);
-	clip3->AddKeyFrame(glm::vec3(-5, 3, 0), 1, EasingType::SineEaseIn);
+	clip3->AddKeyFrame(glm::vec3(-5, 1, 0), 1, EasingType::SineEaseIn);
 
 	clip3->SetCurrentKeyType(ROTATION);
 	clip3->AddKeyFrame(glm::vec3(0, 0, 0), 0);
@@ -61,11 +61,11 @@ void AnimationApplication::SetUp()
 
 	clip4->SetCurrentKeyType(POSITION);
 	clip4->AddKeyFrame(glm::vec3(-5, 3, 0), 0);
-	clip4->AddKeyFrame(glm::vec3(-2, 0, 0), 1);
+	clip4->AddKeyFrame(glm::vec3(-2, 0, 0), 3);
 
 	clip4->SetCurrentKeyType(ROTATION);
 	clip4->AddKeyFrame(glm::vec3(40, 90, 0), 0);
-	clip4->AddKeyFrame(glm::vec3(0, 0, 0), 1);
+	clip4->AddKeyFrame(glm::vec3(0, 0, 0), 3);
 
 
 	AnimatedObject* model2 = new AnimatedObject();

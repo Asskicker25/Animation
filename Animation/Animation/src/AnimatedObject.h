@@ -13,6 +13,7 @@ public:
 	// Inherited via BaseAnimationHelper
 	void SetAnimatedPosition(const glm::vec3& position) override;
 	void SetAnimatedRotation(const glm::vec3& rotation) override;
+	void SetAnimatedRotation(const glm::quat& rotation) override;
 	void SetAnimatedScale(const glm::vec3& scale) override;
 
 };

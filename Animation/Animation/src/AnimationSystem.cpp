@@ -25,6 +25,8 @@ void AnimationSystem::UpdateAnimations(float deltaTime)
 
 	animationTime += deltaTime * animationSpeed;
 
+	if (animationTime < 0) { animationTime = 0; }
+
 	for (BaseAnimationHelper* animObject : listOfAnimatedObjects)
 	{
 		if (!animObject->IsAnimationAvailable()) continue;
@@ -47,8 +49,7 @@ void AnimationSystem::HandleAnimation(BaseAnimationHelper* animObject)
 		{
 			animObject->SetAnimatedPosition(value);
 		});
-
-	HandleKeyFrames_Vector3(animationClip->time, animationClip->listOfRotationKeyFrames, [animObject](glm::vec3 value)
+	HandleKeyFrames_Quaternion(animationClip->time, animationClip->listOfRotationKeyFrames, [animObject](glm::quat value)
 		{
 			animObject->SetAnimatedRotation(value);
 		});
@@ -57,7 +58,6 @@ void AnimationSystem::HandleAnimation(BaseAnimationHelper* animObject)
 		{
 			animObject->SetAnimatedScale(value);
 		});
-
 }
 
 void AnimationSystem::HandleKeyFrames_Vector3(double time, std::vector<BaseKeyFrame<glm::vec3>>& keyFrames, 
@@ -118,5 +118,70 @@ void AnimationSystem::HandleKeyFrames_Vector3(double time, std::vector<BaseKeyFr
 	glm::vec3 delta = endKeyFrame.mValue - startKeyFrame.mValue;
 	OnValueApply(startKeyFrame.mValue + delta * result);
 
+}
+
+void AnimationSystem::HandleKeyFrames_Quaternion(double time, std::vector<BaseKeyFrame<glm::vec3>>& keyFrames,
+	std::function<void(glm::quat)> OnValueApply)
+{
+	if (keyFrames.size() == 0) return;
+
+	if (keyFrames.size() == 1)
+	{
+		glm::quat quaternionRotation = glm::quat(glm::radians(keyFrames[0].mValue));
+		OnValueApply(quaternionRotation);
+		return;
+	}
+
+	int keyFrameEndIndex = 0;
+	for (; keyFrameEndIndex < keyFrames.size(); keyFrameEndIndex++)
+	{
+		if (keyFrames[keyFrameEndIndex].mTime > time)
+		{
+			break;
+		}
+	}
+
+	if (keyFrameEndIndex >= keyFrames.size())
+	{
+		glm::quat quaternionRotation = glm::quat(glm::radians(keyFrames[keyFrameEndIndex - 1].mValue));
+		OnValueApply(quaternionRotation);
+		return;
+	}
+
+	int keyFrameStartIndex = keyFrameEndIndex - 1;
+
+	BaseKeyFrame<glm::vec3> startKeyFrame = keyFrames[keyFrameStartIndex];
+	BaseKeyFrame<glm::vec3> endKeyFrame = keyFrames[keyFrameEndIndex];
+
+	float percent = (time - startKeyFrame.mTime) / (endKeyFrame.mTime - startKeyFrame.mTime);
+
+	float result = 0.0f;
+
+	switch (endKeyFrame.mEasingType)
+	{
+	case EasingType::Linear:
+		result = percent;
+		break;
+
+	case EasingType::SineEaseIn:
+		result = glm::sineEaseIn(percent);
+		break;
+
+	case EasingType::SineEaseOut:
+		result = glm::sineEaseOut(percent);
+		break;
+
+	case EasingType::SineEaseInOut:
+		result = glm::sineEaseInOut(percent);
+		break;
+
+	}
+
+	glm::quat startRotation = glm::quat(glm::radians(startKeyFrame.mValue));
+	glm::quat endRotation = glm::quat(glm::radians(endKeyFrame.mValue));
+
+	glm::quat quaternionRotation = glm::slerp(startRotation, endRotation, result);
+	
+	OnValueApply(quaternionRotation);
 }
 

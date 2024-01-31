@@ -22,8 +22,12 @@ public:
 private:
 
 	void HandleAnimation(BaseAnimationHelper* animObject);
+
 	void HandleKeyFrames_Vector3(double time, std::vector<BaseKeyFrame<glm::vec3>>& keyFrames, 
 		std::function<void(glm::vec3)> OnValueApply = nullptr);
+
+	void HandleKeyFrames_Quaternion(double time, std::vector<BaseKeyFrame<glm::vec3>>& keyFrames,
+		std::function<void(glm::quat)> OnValueApply = nullptr);
 
 	std::vector<BaseAnimationHelper*> listOfAnimatedObjects;
 	
