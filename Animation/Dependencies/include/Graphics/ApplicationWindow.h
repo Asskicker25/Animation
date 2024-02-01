@@ -53,6 +53,7 @@ public:
 	bool stopKeyCallback{ false };
 	bool stopMouseCallback{ false };
 	bool applicationPlay{ false };
+	bool imGuiPanelEnable{ true };
 
 	glm::vec2 currentMousePos{ 0 };
 	glm::vec2 lastMousePos{ 0 };

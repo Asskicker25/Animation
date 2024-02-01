@@ -1,8 +1,9 @@
 #include "AnimatedObject.h"
 #include "AnimationSystem.h"
 
-AnimatedObject::AnimatedObject()
+AnimatedObject::AnimatedObject(bool showEasingColor)
 {
+	this->showEasingColor = showEasingColor;
 	AnimationSystem::GetInstance().AddAnimatedObject(this);
 }
 
@@ -37,4 +38,16 @@ void AnimatedObject::SetBaseColor(const glm::vec4& color)
 	{
 		mesh->material->AsMaterial()->SetBaseColor(color);
 	}
+}
+
+void AnimatedObject::OnSceneDraw()
+{
+	Model::OnSceneDraw();
+}
+
+void AnimatedObject::OnPropertyDraw()
+{
+	Model::OnPropertyDraw();
+
+	ImGui::Checkbox("CanAnimate", &canAnimate);
 }

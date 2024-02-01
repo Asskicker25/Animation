@@ -49,6 +49,11 @@ public:
 	virtual void OnPropertyDraw();
 	virtual void OnSceneDraw();
 
+	// Inherited via Entity
+	virtual void Start() override;
+	virtual void Update(float deltaTime) override;
+	virtual void OnDestroy();
+
 private:
 
 	Model* parentModel = nullptr;
@@ -64,13 +69,6 @@ private:
 
 	void SetModelMatrix(Shader* shader);
 	void SetInverseModelMatrix(Shader* shader);
-
-	// Inherited via Entity
-	void Start() override;
-	void Update(float deltaTime) override;
-
-	virtual void OnDestroy();
-	
 
 	void OnModelSelected();
 };

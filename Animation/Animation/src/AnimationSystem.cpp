@@ -2,10 +2,21 @@
 #include <glm/gtx/easing.hpp>
 
 
+AnimationSystem::AnimationSystem()
+{
+	InitializeEntity(this);
+
+	name = "AnimationSystem";
+}
+
 AnimationSystem& AnimationSystem::GetInstance()
 {
 	static AnimationSystem instance;
 	return instance;
+}
+
+void AnimationSystem::Initialize()
+{
 }
 
 void AnimationSystem::AddAnimatedObject(BaseAnimationHelper* animObject)
@@ -19,15 +30,31 @@ void AnimationSystem::RemoveAnimatedObject(BaseAnimationHelper* animObject)
 		listOfAnimatedObjects.end(), animObject), listOfAnimatedObjects.end());
 }
 
+void AnimationSystem::Start()
+{
+}
+
+void AnimationSystem::Update(float deltaTime)
+{
+	UpdateAnimations(deltaTime);
+}
+
+void AnimationSystem::OnDestroy()
+{
+}
+
+
 void AnimationSystem::UpdateAnimations(float deltaTime)
 {
 	if (!isPlaying) return;
+	if (currentSequence == nullptr) return;
 
 	currentSequence->CalculateTime(deltaTime * animationSpeed);
 
 	for (BaseAnimationHelper* animObject : listOfAnimatedObjects)
 	{
-		if (!animObject->IsAnimationAvailable()) continue;
+		if (!animObject->IsAnimationAvailable() || !animObject->canAnimate 
+			|| animObject->GetCurrentAnimationClip() == nullptr) continue;
 
 		animObject->GetCurrentAnimationClip()->time = currentSequence->GetCurrentTime();
 		HandleAnimation(animObject);
@@ -48,9 +75,13 @@ void AnimationSystem::HandleAnimation(BaseAnimationHelper* animObject)
 		{
 			animObject->SetAnimatedPosition(value);
 		}, 
+
 		[animObject](glm::vec4 color)
+		{
+			if (animObject->showEasingColor)
 			{
-			animObject->SetBaseColor(color);
+				animObject->SetBaseColor(color);
+			}
 		});
 	HandleKeyFrames_Quaternion(animationClip->time, animationClip->listOfRotationKeyFrames, [animObject](glm::quat value)
 		{
@@ -235,4 +266,5 @@ void AnimationSystem::HandleKeyFrames_Quaternion(double time, std::vector<BaseKe
 	
 	OnValueApply(quaternionRotation);
 }
+
 

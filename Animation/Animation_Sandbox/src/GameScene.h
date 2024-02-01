@@ -12,6 +12,7 @@ class GameScene : public Entity
 public:
 
 	GameScene();
+	~GameScene();
 	std::vector<AnimatedObject*> listOfAnimatedObjects;
 	AnimationSequenceManager* sequenceManager;
 
@@ -22,5 +23,11 @@ public:
 
 	void OnSequenceChange(int index);
 	void OnSequenceReset(int index);
+
+	void SpawnXWingOne();
+	void SpawnXWingTwo();
+	void SpawnExplosionOne();
+	void SpawnExplosionTwo();
+
 };
 

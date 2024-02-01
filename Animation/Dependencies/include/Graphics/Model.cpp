@@ -396,6 +396,11 @@ MeshAndMaterial* Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 
 	std::string meshName = mesh->mName.C_Str();
 
+	if (meshName == "")
+	{
+		meshName = "Mesh " + std::to_string(meshes.size());
+	}
+
 	return new MeshAndMaterial{ std::make_shared<Mesh>(vertices, indices, meshName) , meshMat };
 }
 

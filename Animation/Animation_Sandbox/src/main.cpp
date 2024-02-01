@@ -6,7 +6,7 @@ int main(int argc, char* argv[])
 
 	AnimationApplication application;
 	
-	Debugger::print = true;
+	Debugger::print = false;
 
 	Mesh::normalScale = NORMALS_SIZE;
 	Light::lightModelScale = LIGHT_MODEL_SIZE;

@@ -2,7 +2,7 @@
 
 void WindowDockPanel::OnRender(float windowSizeX, float windowSizeY)
 {
-	//return;
+	return;
 
 	static bool dockSpaceOpen = true;
 	static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;

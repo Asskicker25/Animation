@@ -141,12 +141,14 @@
     <ClCompile Include="src\AnimationSequenceManager.cpp" />
     <ClCompile Include="src\AnimationApplication.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\StarDestroyer\StarDestroyer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\GameScene.h" />
     <ClInclude Include="src\AnimationSequenceManager.h" />
     <ClInclude Include="src\AnimationApplication.h" />
     <ClInclude Include="src\AppSettings.h" />
+    <ClInclude Include="src\StarDestroyer\StarDestroyer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Sphere\Sphere 1.fbx" />

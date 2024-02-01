@@ -7,7 +7,7 @@ class AnimatedObject : public Model, public BaseAnimationHelper
 {
 
 public:
-	AnimatedObject();
+	AnimatedObject(bool showEasingColor = true);
 	~AnimatedObject();
 
 	// Inherited via BaseAnimationHelper
@@ -19,6 +19,13 @@ public:
 
 	// Inherited via BaseAnimationHelper
 	void SetBaseColor(const glm::vec4& color) override;
+
+	virtual void Start() { Model::Start(); }
+	virtual void Update(float deltaTime) { Model::Update(deltaTime); }
+	virtual void OnDestroy() { Model::OnDestroy(); }
+
+	virtual void OnSceneDraw() override;
+	virtual void OnPropertyDraw() override;
 
 };
 

@@ -4,19 +4,22 @@
 #include "AnimatedObject.h"
 #include "AnimationSequence.h"
 
-class AnimationSystem
+class AnimationSystem : public Entity
 {
 
 public:
+	AnimationSystem();
 
 	static AnimationSystem& GetInstance();
+
+	void Initialize();
 
 	void AddAnimatedObject(BaseAnimationHelper* animObject);
 	void RemoveAnimatedObject(BaseAnimationHelper* animObject);
 	void UpdateAnimations(float deltaTime);
 	void TogglePlayAndPause();
 
-	AnimationSequence* currentSequence;
+	AnimationSequence* currentSequence = nullptr;
 
 	float animationSpeed = 1;
 
@@ -34,5 +37,10 @@ private:
 	std::vector<BaseAnimationHelper*> listOfAnimatedObjects;
 	
 	bool isPlaying = true;
+
+	// Inherited via Entity
+	void Start() override;
+	void Update(float deltaTime) override;
+	void OnDestroy() override;
 };
 

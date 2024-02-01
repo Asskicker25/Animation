@@ -13,14 +13,16 @@ void BaseAnimationHelper::RemoveAnimationClip(AnimationClip* clip)
 
 AnimationClip* BaseAnimationHelper::GetCurrentAnimationClip()
 {
+	if (currentAnimationIndex < 0 || currentAnimationIndex >= listOfAnimationClips.size())
+	{
+		return nullptr;
+	}
+
 	return listOfAnimationClips[currentAnimationIndex];
 }
 
 void BaseAnimationHelper::SetCurrentAnimationClip(int index)
 {
-	if (index < 0) { index = 0; }
-	if (index >= listOfAnimationClips.size()) { index = listOfAnimationClips.size() - 1; }
-
 	currentAnimationIndex = index;
 }
 

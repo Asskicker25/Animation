@@ -3,20 +3,39 @@
 
 void AnimationApplication::SetUp()
 {
-	camera->InitializeCamera(PERSPECTIVE, windowWidth, windowHeight, 0.1f, 100.0f, 45.0f);
+	camera->InitializeCamera(PERSPECTIVE, windowWidth, windowHeight, 0.1f, 600.0f, 45.0f);
 
 	camera->transform.SetPosition(glm::vec3(0, 0, 15));
+
+	applicationPlay = false;
+
+#pragma region Skybox
+
+	skyBox->meshes[0]->material = new SkyBoxMaterial();
+	SkyBoxMaterial* skyboxMat = skyBox->meshes[0]->material->AsSkyBoxMaterial();
+
+	skyboxMat->skyBoxTexture->LoadTexture({
+		"Assets/Skybox/Right.jpg",
+		"Assets/Skybox/Left.jpg",
+		"Assets/Skybox/Up.jpg",
+		"Assets/Skybox/Down.jpg",
+		"Assets/Skybox/Front.jpg",
+		"Assets/Skybox/Back.jpg",
+		});
+
+#pragma endregion
+
 
 	Light* dirLight = new Light(Directional);
 	dirLight->transform.SetPosition(glm::vec3(0, 0, 3));
 
-
 	GameScene* gameScene = new GameScene();
+
+	AnimationSystem::GetInstance().Initialize();
 }
 
 void AnimationApplication::Update()
 {
-	AnimationSystem::GetInstance().UpdateAnimations(Timer::GetInstance().deltaTime);
 }
 
 void AnimationApplication::Render()
