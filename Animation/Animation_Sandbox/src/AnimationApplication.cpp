@@ -7,7 +7,10 @@ void AnimationApplication::SetUp()
 
 	camera->transform.SetPosition(glm::vec3(0, 0, 15));
 
-	applicationPlay = false;
+	applicationPlay = true;
+	imGuiPanelEnable = false;
+	stopKeyCallback = true;
+	stopMouseCallback = true;
 
 #pragma region Skybox
 

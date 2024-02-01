@@ -36,7 +36,7 @@ private:
 
 	std::vector<BaseAnimationHelper*> listOfAnimatedObjects;
 	
-	bool isPlaying = true;
+	bool isPlaying = false;
 
 	// Inherited via Entity
 	void Start() override;

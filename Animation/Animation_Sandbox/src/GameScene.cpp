@@ -27,9 +27,12 @@ GameScene::GameScene()
 
 	AnimationSequence* sequence1 = new AnimationSequence();
 	AnimationSequence* sequence2 = new AnimationSequence();
+	AnimationSequence* sequence3 = new AnimationSequence();
 	sequence1->SetDuration(10);
 	sequence2->SetDuration(6);
+	sequence3->SetDuration(4);
 
+	sequenceManager->AddSequence(sequence3);
 	sequenceManager->AddSequence(sequence1);
 	sequenceManager->AddSequence(sequence2);
 
@@ -82,6 +85,9 @@ void GameScene::SpawnXWingOne()
 	xwing1->transform.SetScale(glm::vec3(0.1f));
 	xwing1->transform.SetPosition(glm::vec3(0, -0.3f, 16));
 
+
+
+
 #pragma region ClipOne
 	AnimationClip* clip1 = new AnimationClip();
 
@@ -89,7 +95,6 @@ void GameScene::SpawnXWingOne()
 	clip1->AddKeyFrame(glm::vec3(0, -0.3f, 16), 0);
 	clip1->AddKeyFrame(glm::vec3(0.7f, -0.3f, 1.5), 5.0f, SineEaseIn);
 	clip1->AddKeyFrame(glm::vec3(0.86, -0.3f, 16), 10.0f, SineEaseOut);
-
 
 	clip1->SetCurrentKeyType(ROTATION);
 	clip1->AddKeyFrame(glm::vec3(0, 0, 0), 0);
@@ -100,6 +105,12 @@ void GameScene::SpawnXWingOne()
 	clip1->AddKeyFrame(glm::vec3(0.1), 0);
 	clip1->AddKeyFrame(glm::vec3(0.1), 10);
 
+	clip1->AddKeyFrameEvent(new KeyFrameEvent(5, [this]()
+		{
+			std::cout << "Star Destroyer Explosion Trigger " << std::endl;
+		}));
+
+
 
 #pragma endregion
 
@@ -108,7 +119,7 @@ void GameScene::SpawnXWingOne()
 	AnimationClip* clip2 = new AnimationClip();
 	clip2->SetCurrentKeyType(POSITION);
 	clip2->AddKeyFrame(glm::vec3(5.5, 0.0f, 9.6), 0);
-	clip2->AddKeyFrame(glm::vec3(-1.26, 0.0f, 9.6), 3);
+	clip2->AddKeyFrame(glm::vec3(-1.26, 0.0f, 9.6), 3, SineEaseIn);
 
 	clip2->SetCurrentKeyType(ROTATION);
 	clip2->AddKeyFrame(glm::vec3(-1.2, 77.0f, 0), 0);
@@ -119,9 +130,27 @@ void GameScene::SpawnXWingOne()
 	clip2->AddKeyFrame(glm::vec3(0.1), 3);
 	clip2->AddKeyFrame(glm::vec3(0), 4);
 
+	clip2->AddKeyFrameEvent(new KeyFrameEvent(3, [this]()
+		{
+			std::cout << "XWing Explosion Trigger " << std::endl;
+		}));
+
 #pragma endregion
 
+#pragma region ClipThree
 
+	AnimationClip* clip3 = new AnimationClip();
+	clip3->SetCurrentKeyType(POSITION);
+	clip3->AddKeyFrame(glm::vec3(-10, 0.0f, 0.6), 0);
+	clip3->AddKeyFrame(glm::vec3(10, 0.0f, 0.6), 4, SineEaseIn);
+
+	clip3->SetCurrentKeyType(ROTATION);
+	clip3->AddKeyFrame(glm::vec3(-280, 0.0f, -90.0), 0);
+
+
+#pragma endregion
+
+	xwing1->AddAnimationClip(clip3);
 	xwing1->AddAnimationClip(clip1);
 	xwing1->AddAnimationClip(clip2);
 	listOfAnimatedObjects.push_back(xwing1);
@@ -162,8 +191,8 @@ void GameScene::SpawnXWingTwo()
 
 	clip2->SetCurrentKeyType(POSITION);
 	clip2->AddKeyFrame(glm::vec3(-8.0f, 6.5f, -0.54f), 0);
-	clip2->AddKeyFrame(glm::vec3(-8.0f, 3.0f, -0.54f), 1.5f);
-	clip2->AddKeyFrame(glm::vec3(-2.0f, 0.1f, 8.44f), 3.0f);
+	clip2->AddKeyFrame(glm::vec3(-8.0f, 3.0f, -0.54f), 1.5f, SineEaseIn);
+	clip2->AddKeyFrame(glm::vec3(-2.0f, 0.1f, 8.44f), 3.0f, SineEaseInOut);
 
 	clip2->SetCurrentKeyType(ROTATION);
 	clip2->AddKeyFrame(glm::vec3(-24.0f, -151.5f, 0.0), 0);
@@ -178,7 +207,20 @@ void GameScene::SpawnXWingTwo()
 
 #pragma endregion
 
+#pragma region ClipThree
 
+	AnimationClip* clip3 = new AnimationClip();
+	clip3->SetCurrentKeyType(POSITION);
+	clip3->AddKeyFrame(glm::vec3(-10, -1.6f, 0.6), 0);
+	clip3->AddKeyFrame(glm::vec3(10, -1.6f, 0.6), 4, SineEaseInOut);
+
+	clip3->SetCurrentKeyType(ROTATION);
+	clip3->AddKeyFrame(glm::vec3(-280, 0.0f, -90.0), 0);
+
+
+#pragma endregion
+
+	xwing2->AddAnimationClip(clip3);
 	xwing2->AddAnimationClip(clip1);
 	xwing2->AddAnimationClip(clip2);
 	listOfAnimatedObjects.push_back(xwing2);
@@ -220,6 +262,11 @@ void GameScene::SpawnExplosionOne()
 	clip2->AddKeyFrame(glm::vec3(1), 3.8, SineEaseOut);
 	clip2->AddKeyFrame(glm::vec3(0), 6, SineEaseIn);
 
+	AnimationClip* clip3 = new AnimationClip();
+	clip3->SetCurrentKeyType(SCALE);
+	clip3->AddKeyFrame(glm::vec3(0), 0);
+
+	explosion->AddAnimationClip(clip3);
 	explosion->AddAnimationClip(clip1);
 	explosion->AddAnimationClip(clip2);
 
@@ -253,6 +300,12 @@ void GameScene::SpawnExplosionTwo()
 	clip2->AddKeyFrame(glm::vec3(1), 3.8, SineEaseOut);
 	clip2->AddKeyFrame(glm::vec3(0), 6, SineEaseIn);
 
+
+	AnimationClip* clip3 = new AnimationClip();
+	clip3->SetCurrentKeyType(SCALE);
+	clip3->AddKeyFrame(glm::vec3(0), 0);
+
+	explosion->AddAnimationClip(clip3);
 	explosion->AddAnimationClip(clip1);
 	explosion->AddAnimationClip(clip2);
 
