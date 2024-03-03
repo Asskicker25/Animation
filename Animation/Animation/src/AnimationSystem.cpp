@@ -43,6 +43,9 @@ void AnimationSystem::OnDestroy()
 {
 }
 
+void AnimationSystem::Render()
+{
+}
 
 void AnimationSystem::UpdateAnimations(float deltaTime)
 {

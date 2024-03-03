@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Graphics/Model.h>
+#include <Graphics/Mesh/Model.h>
 #include "BaseAnimationHelper.h"
 
 class AnimatedObject : public Model, public BaseAnimationHelper
