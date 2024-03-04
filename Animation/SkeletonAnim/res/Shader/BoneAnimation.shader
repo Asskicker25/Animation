@@ -16,7 +16,7 @@ out vec4 VertexColor;
 
 uniform vec3 textureTiling;  //x, y
 
-uniform mat4 boneMatrices[50];
+uniform mat4 boneMatrices[100];
 uniform bool useBones;
 
 uniform mat4 projection;
