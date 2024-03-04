@@ -257,7 +257,7 @@ void SkeletonModel::CalcualteNodeMatricses(RootNodeInfo* meshRootNodeInfo, BoneN
 	{
 		BoneInfo& boneInfo = it->second;
 
-		boneInfo.mFinalTransformation = /*GlobalInverseTransformation * */ globalTransformation * boneInfo.mBoneOffset;
+		boneInfo.mFinalTransformation = GlobalInverseTransformation * globalTransformation * boneInfo.mBoneOffset;
 		boneInfo.mGlobalTransformation = globalTransformation;
 
 		matArray[boneInfo.boneId] = boneInfo.mFinalTransformation;

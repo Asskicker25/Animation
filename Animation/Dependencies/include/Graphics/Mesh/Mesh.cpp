@@ -137,14 +137,14 @@ void Mesh::SetupMesh()
 	//Color
 	layout.AddLayout<float>(4);
 
-	//Enabled
-	layout.AddLayout<float>(1);
-
 	//BoneWeights
 	layout.AddLayout<float>(4);
 
 	//BoneId
 	layout.AddLayout<float>(4);
+
+	//Enabled
+	layout.AddLayout<float>(1);
 
 	VAO.AddBuffer(VBO, layout);
 
