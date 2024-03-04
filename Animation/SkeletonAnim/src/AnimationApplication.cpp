@@ -3,8 +3,8 @@
 void AnimationApplication::SetUp()
 {
 	viewportCamera->InitializeCamera(PERSPECTIVE, windowWidth, windowHeight, 0.1f, 500.0f, 65.0f);
-	viewportCamera->transform.SetPosition(glm::vec3(2.5f, -294.0f, 23.33f));
-	viewportCamera->transform.SetRotation(glm::vec3(0, 0, 0));
+	viewportCamera->transform.SetPosition(glm::vec3(0.0f, 10.0f, 30.0f));
+	viewportCamera->transform.SetRotation(glm::vec3(-10, 0, 0));
 	viewportCamera->applyPostProcessing = true;
 
 	EditorLayout::GetInstance().SetMaximizeState(true);

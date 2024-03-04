@@ -26,7 +26,6 @@ public:
 
 	void Draw(Shader* shader);
 	void DrawSolidColor(Shader* shader, glm::vec3 color);
-	void SetModelParent(Model* model);
 	Model* CopyFromModel(const Model& model, bool initialize = false);
 	//Material material;
 
@@ -36,6 +35,8 @@ public:
 	void DrawNormals();
 	virtual void DrawShaded(Shader* shader);
 	void DrawWireframe(const glm::vec3& color);
+
+	virtual void DrawShaded(MeshAndMaterial* mesh, Shader* shader);
 
 	virtual void OnPropertyDraw();
 	virtual void OnSceneDraw();
@@ -60,14 +61,11 @@ public:
 
 protected:
 
-	Model* parentModel = nullptr;
-
 	void ProcessNode(aiNode* node, const aiScene* scene);
 	virtual MeshAndMaterial* ProcessMesh(aiMesh* mesh, const aiScene* scene);
 	Texture* LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
 	Texture* LoadDefaultMaterialTextures(aiTextureType type, std::string typeName);
 
-	void DrawShaded(MeshAndMaterial* mesh, Shader* shader);
 	void DrawWireframe(MeshAndMaterial* mesh, Shader* shader);
 	void DrawNormals(MeshAndMaterial* mesh, Shader* shader);
 

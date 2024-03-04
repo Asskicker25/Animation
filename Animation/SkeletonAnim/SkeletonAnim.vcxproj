@@ -71,13 +71,13 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)Dependencies/include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)Dependencies\lib\Debug_assimp;$(ProjectDir)Dependencies\lib\glfw\$(Configuration)_x64;$(ProjectDir)Dependencies\lib\Graphics\$(Configuration);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Animation\src;$(ProjectDir)Dependencies/include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(OutDir);$(ProjectDir)Dependencies\lib\Debug_assimp;$(ProjectDir)Dependencies\lib\glfw\$(Configuration)_x64;$(ProjectDir)Dependencies\lib\Graphics\$(Configuration);$(LibraryPath)</LibraryPath>
     <ExternalIncludePath>$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(ProjectDir)Dependencies/include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)Dependencies\lib\Debug_assimp;$(ProjectDir)Dependencies\lib\glfw\$(Configuration)_x64;$(ProjectDir)Dependencies\lib\Graphics\$(Configuration);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Animation\src;$(ProjectDir)Dependencies/include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(OutDir);$(ProjectDir)Dependencies\lib\Debug_assimp;$(ProjectDir)Dependencies\lib\glfw\$(Configuration)_x64;$(ProjectDir)Dependencies\lib\Graphics\$(Configuration);$(LibraryPath)</LibraryPath>
     <ExternalIncludePath>$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -118,7 +118,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;assimp-vc143-mtd.lib;glfw3.lib;Graphics.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;assimp-vc143-mtd.lib;glfw3.lib;Graphics.lib;Animation.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -135,7 +135,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;assimp-vc143-mtd.lib;glfw3.lib;Graphics.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;assimp-vc143-mtd.lib;glfw3.lib;Graphics.lib;Animation.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -150,6 +150,7 @@
     <ClCompile Include="Dependencies\include\imgui\imgui_tables.cpp" />
     <ClCompile Include="Dependencies\include\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Dependencies\include\imgui\ImSequencer.cpp" />
+    <ClCompile Include="src\Shaders\Shaders.cpp" />
     <ClCompile Include="src\AnimationApplication.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Scene\Scene_One.cpp" />
@@ -169,6 +170,7 @@
     <ClInclude Include="Dependencies\include\imgui\imstb_textedit.h" />
     <ClInclude Include="Dependencies\include\imgui\imstb_truetype.h" />
     <ClInclude Include="Dependencies\include\imgui\ImZoomSlider.h" />
+    <ClInclude Include="src\Shaders\Shaders.h" />
     <ClInclude Include="src\AnimationApplication.h" />
     <ClInclude Include="src\AppSettings.h" />
     <ClInclude Include="src\Scene\Scene_One.h" />

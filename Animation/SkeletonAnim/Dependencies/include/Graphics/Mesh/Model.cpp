@@ -97,11 +97,6 @@ void Model::DrawSolidColor(Shader* shader, glm::vec3 color)
 	}
 }
 
-void Model::SetModelParent(Model* model)
-{
-	parentModel = model;
-}
-
 void Model::DrawShaded(MeshAndMaterial* mesh, Shader* shader)
 {
 	shader->Bind();
@@ -140,16 +135,12 @@ void Model::DrawNormals(MeshAndMaterial* mesh, Shader* shader)
 
 void Model::SetModelMatrix(Shader* shader)
 {
-	shader->SetUniformMat("model",
-		parentModel == nullptr ? transform.GetTransformMatrix() :
-		parentModel->transform.GetTransformMatrix() * transform.GetTransformMatrix());
+	shader->SetUniformMat("model", transform.GetTransformMatrix());
 }
 
 void Model::SetInverseModelMatrix(Shader* shader)
 {
-	shader->SetUniformMat("inverseModel",
-		parentModel == nullptr ? transform.GetInverseMatrix() :
-		parentModel->transform.GetInverseMatrix() * transform.GetInverseMatrix());
+	shader->SetUniformMat("inverseModel", transform.GetInverseMatrix());
 }
 
 
