@@ -28,8 +28,8 @@ struct BoneNode
 struct RootNodeInfo
 {
 	BoneNode* mRootNode = nullptr;
-	//std::unordered_map<unsigned int, BoneInfo> mListOfBoneInfos;
-	std::unordered_map<std::string, BoneInfo> mListOfBoneInfos;
+	std::unordered_map<std::string, int> mBoneNameToIdMap;
+	std::vector<BoneInfo> mBoneInfoVec;
 };
 
 struct BoneWeightInfo
