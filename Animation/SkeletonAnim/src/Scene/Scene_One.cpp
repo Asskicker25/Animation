@@ -30,7 +30,7 @@ void Scene_One::Start()
 	character->shader = Shaders::GetInstance().mBoneAnimationShader;
 	//character->LoadModel("Assets/Models/Character_Idle.fbx");
 	character->LoadModel("Assets/Models/Ninja.fbx");
-	//character->LoadModel("Assets/Models/Adventurer Aland@Idle.FBX");
+	//character->LoadModel("Assets/Models/RaceDriver.fbx");
 	character->transform.SetScale(glm::vec3(0.08f));
 }
 
