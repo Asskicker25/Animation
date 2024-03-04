@@ -11,9 +11,9 @@ void AssimpToGLM(const aiMatrix4x4& a, glm::mat4& g)
 	g[3][0] = a.a4; g[3][1] = a.b4; g[3][2] = a.c4; g[3][3] = a.d4;
 }
 
-BoneNode* CreateBoneNode(aiNode* node)
+HeirarchyNode* CreateBoneNode(aiNode* node)
 {
-	BoneNode* newNode = new BoneNode(node->mName.C_Str());
+	HeirarchyNode* newNode = new HeirarchyNode(node->mName.C_Str());
 
 	AssimpToGLM(node->mTransformation, newNode->mNodeTransformation);
 

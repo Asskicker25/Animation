@@ -2,8 +2,9 @@
 #include <Graphics/Mesh/Model.h>
 #include "SkeletonData.h"
 
+#include "BaseAnimationHelper.h"
 
-class SkeletonModel : public Model
+class SkeletonModel : public Model, public BaseAnimationHelper
 {
 public:
 	SkeletonModel();
@@ -13,10 +14,16 @@ public:
 
 	std::unordered_map<std::shared_ptr<Mesh>, RootNodeInfo*> mListOfMeshRootNodes;
 
+	virtual void SetAnimatedPosition(const glm::vec3& position);
+	virtual void SetAnimatedRotation(const glm::vec3& rotation);
+	virtual void SetAnimatedRotation(const glm::quat& rotation);
+	virtual void SetAnimatedScale(const glm::vec3& scale);
+	virtual void SetBaseColor(const glm::vec4& color);
+
 private:
 	glm::mat4 GlobalInverseTransformation;
 
-	BoneNode* GenerateBoneHeirachy(aiNode* node);
-	void CalcualteNodeMatricses(RootNodeInfo* meshRootNodeInfo, BoneNode* node, glm::mat4& parentTransformationMatrix, std::vector<glm::mat4>& matArray);
+	HeirarchyNode* GenerateBoneHeirachy(aiNode* node);
+	void CalcualteNodeMatricses(RootNodeInfo* meshRootNodeInfo, HeirarchyNode* node, glm::mat4& parentTransformationMatrix, std::vector<glm::mat4>& matArray);
 };
 

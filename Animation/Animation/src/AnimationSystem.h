@@ -19,9 +19,10 @@ public:
 	void UpdateAnimations(float deltaTime);
 	void TogglePlayAndPause();
 
-	AnimationSequence* currentSequence = nullptr;
+	//AnimationSequence* currentSequence = nullptr;
 
 	float animationSpeed = 1;
+	float currentTime = 0;
 
 private:
 

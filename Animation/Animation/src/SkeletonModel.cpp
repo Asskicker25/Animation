@@ -1,4 +1,5 @@
 #include "SkeletonModel.h"
+#include "AnimationSystem.h"
 
 #include <Graphics/MathUtils.h>
 #include <Graphics/Material/UnlitColorMaterial.h>
@@ -8,10 +9,39 @@ using namespace MathUtilities;
 
 SkeletonModel::SkeletonModel() : Model()
 {
+	AnimationSystem::GetInstance().AddAnimatedObject(this);
 }
 
 SkeletonModel::SkeletonModel(const std::string& path, bool debugModel) : Model(path, debugModel)
 {
+}
+
+void SkeletonModel::SetAnimatedPosition(const glm::vec3& position)
+{
+	transform.SetPosition(position);
+}
+
+void SkeletonModel::SetAnimatedRotation(const glm::vec3& rotation)
+{
+	transform.SetRotation(rotation);
+}
+
+void SkeletonModel::SetAnimatedRotation(const glm::quat& rotation)
+{
+	transform.SetQuatRotation(rotation);
+}
+
+void SkeletonModel::SetAnimatedScale(const glm::vec3& scale)
+{
+	transform.SetScale(scale);
+}
+
+void SkeletonModel::SetBaseColor(const glm::vec4& color)
+{
+	for (MeshAndMaterial* mesh : meshes)
+	{
+		mesh->material->AsMaterial()->SetBaseColor(color);
+	}
 }
 
 MeshAndMaterial* SkeletonModel::ProcessMesh(aiMesh* mesh, const aiScene* scene)
@@ -203,9 +233,9 @@ MeshAndMaterial* SkeletonModel::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 	return new MeshAndMaterial{ meshInstance, meshMat };
 }
 
-BoneNode* SkeletonModel::GenerateBoneHeirachy(aiNode* node)
+HeirarchyNode* SkeletonModel::GenerateBoneHeirachy(aiNode* node)
 {
-	BoneNode* boneNode = CreateBoneNode(node);
+	HeirarchyNode* boneNode = CreateBoneNode(node);
 	//Debugger::Print("Bone Name : ", boneNode->mName);
 
 	for (int i = 0; i < node->mNumChildren; i++)
@@ -238,15 +268,9 @@ void SkeletonModel::DrawShaded(MeshAndMaterial* mesh, Shader* shader)
 
 }
 
-
-
-
-void SkeletonModel::CalcualteNodeMatricses(RootNodeInfo* meshRootNodeInfo, BoneNode* node, glm::mat4& parentTransformationMatrix,
+void SkeletonModel::CalcualteNodeMatricses(RootNodeInfo* meshRootNodeInfo, HeirarchyNode* node, glm::mat4& parentTransformationMatrix,
 	std::vector<glm::mat4>& matArray)
 {
-	//Debugger::Print("Bone calc : ", node->mName);
-	//unsigned int nodeHash = MathUtils::GetHash(node->mName);
-
 	glm::mat4 transformMatrix = node->mNodeTransformation;
 
 	glm::mat4 globalTransformation = parentTransformationMatrix * transformMatrix;
@@ -268,6 +292,5 @@ void SkeletonModel::CalcualteNodeMatricses(RootNodeInfo* meshRootNodeInfo, BoneN
 		CalcualteNodeMatricses(meshRootNodeInfo, node->Children[i], globalTransformation, matArray);
 	}
 
-	//shader->SetUniformMatrix4fv("boneMatrices", numInstances, GL_FALSE, glm::value_ptr(boneMatrices[0]));
-
 }
+

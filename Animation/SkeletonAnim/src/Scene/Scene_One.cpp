@@ -2,6 +2,9 @@
 #include "../AppSettings.h"
 #include "../AnimationApplication.h"
 #include "../Shaders/Shaders.h"
+#include "../Character/Character.h"
+
+#include <AnimationSystem.h>
 
 #include <SkeletonModel.h>
 
@@ -25,13 +28,9 @@ void Scene_One::Start()
 	mDirLight->InitializeLight(Directional);
 	mDirLight->intensity = 0.7;
 
+	Character* character = new Character();
 
-	SkeletonModel* character = new SkeletonModel();
-	character->shader = Shaders::GetInstance().mBoneAnimationShader;
-	//character->LoadModel("Assets/Models/Character_Idle.fbx");
-	//character->LoadModel("Assets/Models/Ninja.fbx");
-	character->LoadModel("Assets/Models/RaceDriver.fbx");
-	character->transform.SetScale(glm::vec3(0.08f));
+	AnimationSystem::GetInstance().TogglePlayAndPause();
 }
 
 void Scene_One::Update()

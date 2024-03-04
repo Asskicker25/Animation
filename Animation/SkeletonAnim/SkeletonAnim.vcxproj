@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Character\Character.cpp" />
     <ClCompile Include="Dependencies\include\imgui\ImCurveEdit.cpp" />
     <ClCompile Include="Dependencies\include\imgui\ImGradient.cpp" />
     <ClCompile Include="Dependencies\include\imgui\imgui.cpp" />
@@ -156,6 +157,7 @@
     <ClCompile Include="src\Scene\Scene_One.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Character\Character.h" />
     <ClInclude Include="Dependencies\include\imgui\imconfig.h" />
     <ClInclude Include="Dependencies\include\imgui\ImCurveEdit.h" />
     <ClInclude Include="Dependencies\include\imgui\ImGradient.h" />

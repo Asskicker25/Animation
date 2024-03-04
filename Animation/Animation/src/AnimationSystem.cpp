@@ -50,16 +50,19 @@ void AnimationSystem::Render()
 void AnimationSystem::UpdateAnimations(float deltaTime)
 {
 	if (!isPlaying) return;
-	if (currentSequence == nullptr) return;
 
-	currentSequence->CalculateTime(deltaTime * animationSpeed);
+	currentTime += deltaTime;
+
+	//if (currentSequence == nullptr) return;
+
+	//currentSequence->CalculateTime(deltaTime * animationSpeed);
 
 	for (BaseAnimationHelper* animObject : listOfAnimatedObjects)
 	{
 		if (!animObject->IsAnimationAvailable() || !animObject->canAnimate 
 			|| animObject->GetCurrentAnimationClip() == nullptr) continue;
 
-		animObject->GetCurrentAnimationClip()->time = currentSequence->GetCurrentTime();
+		animObject->GetCurrentAnimationClip()->time = currentTime;
 		HandleAnimation(animObject);
 		HandleEventInvoke(animObject);
 	}
@@ -99,7 +102,7 @@ void AnimationSystem::HandleAnimation(BaseAnimationHelper* animObject)
 
 void AnimationSystem::HandleEventInvoke(BaseAnimationHelper* animObject)
 {
-	AnimationClip* clip = animObject->GetCurrentAnimationClip();
+	/*AnimationClip* clip = animObject->GetCurrentAnimationClip();
 
 	for (KeyFrameEvent* keyFrameEvent : clip->listOfKeyFrameEvents)
 	{
@@ -127,7 +130,7 @@ void AnimationSystem::HandleEventInvoke(BaseAnimationHelper* animObject)
 
 			break;
 		}
-	}
+	}*/
 }
 
 void AnimationSystem::HandleKeyFrames_Vector3(double time, std::vector<BaseKeyFrame<glm::vec3>>& keyFrames, 
