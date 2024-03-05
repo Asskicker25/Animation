@@ -5,6 +5,7 @@
 #include <assimp/scene.h>
 #include <unordered_map>
 #include "BaseKeyFrame.h"
+#include "AnimationClip.h"
 
 #include <Graphics/Transform.h>
 
@@ -31,6 +32,7 @@ struct RootNodeInfo
 	HeirarchyNode* mRootNode = nullptr;
 	//std::unordered_map<unsigned int, BoneInfo> mListOfBoneInfos;
 	std::unordered_map<std::string, BoneInfo> mListOfBoneInfos;
+	std::unordered_map<std::string, HeirarchyNode*> mListOfNodes;
 };
 
 struct BoneWeightInfo
@@ -41,25 +43,32 @@ struct BoneWeightInfo
 
 struct NodeAnim
 {
-	NodeAnim(std::string& name) : mName{ name } {}
+	NodeAnim(const std::string& name, const aiNodeAnim* channel);
 
 	std::string mName;
+	KeyFrameType currentKeyType = POSITION;
+
+	glm::mat4 mLocalTransformMatrix = glm::mat4(1.0f);
 
 	std::vector<BaseKeyFrame<glm::vec3>> mListOfPositionKeyFrames;
 	std::vector<BaseKeyFrame<glm::vec3>> mListOfRotationKeyFrames;
 	std::vector<BaseKeyFrame<glm::vec3>> mListOfScaleKeyFrames;
+
+	void AddKeyFrame(const glm::vec3& value, float time, EasingType easingType);
 };
 
-struct HumanoidAnimation
+struct SkeletalAnimation
 {
-	std::string mName;
-	double mTicksPerSecond;
-	double mDuration;
+	std::string mName = "Empty";
+	double mTicksPerSecond = 30;
+	double mDuration = 0;
 
-	HeirarchyNode* RootNode;
+	HeirarchyNode* RootNode = nullptr;
 	std::vector<NodeAnim*> Channels;
 };
 
 extern void AssimpToGLM(const aiMatrix4x4& a, glm::mat4& g);
+extern glm::vec3 AssimpToGLM(const aiVector3D& vec);
+extern glm::quat AssimpToGLM(const aiQuaternion& quat);
 extern HeirarchyNode* CreateBoneNode(aiNode* node);
 

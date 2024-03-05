@@ -14,21 +14,23 @@ Character::Character()
 	meshes[0]->material->AsMaterial()->diffuseTexture = new Texture("Assets/Models/RaceDriver.png");
 	transform.SetScale(glm::vec3(0.08f));
 
-	AnimationClip* clip1 = new AnimationClip();
+	LoadAndAddAnimationClip("Assets/Animations/Taunt.fbx", "Taunt");
+
+	/*AnimationClip* clip1 = new AnimationClip();
 	clip1->SetCurrentKeyType(POSITION);
 	clip1->AddKeyFrame(glm::vec3(0, 0.0f, 0), 0);
 	clip1->AddKeyFrame(glm::vec3(5, 0.0f, 0), 5.0f, SineEaseIn);
 
-	AddAnimationClip(clip1);
+	AddAnimationClip(clip1);*/
 
 	InputManager::GetInstance().AddListener(this);
 
-	std::unordered_map<std::string, BoneInfo>::iterator it = 
-		mListOfMeshRootNodes[meshes[0]->mesh]->mListOfBoneInfos.find("mixamorig6:Head");
+	/*std::unordered_map<std::string, BoneInfo>::iterator it = 
+		mListOfMeshRootNodes[meshes[0]->mesh]->mListOfBoneInfos.find("mixamorig6:Head");*/
 
-	bone = &it->second;
-	pos = glm::vec3(0,-150,0);
-	bone->mBoneOffset = glm::translate(glm::mat4(1.0f), pos);
+	//bone = &it->second;
+	//pos = glm::vec3(0,-150,0);
+	//bone->mBoneOffset = glm::translate(glm::mat4(1.0f), pos);
 }
 
 void Character::OnKeyPressed(const int& key)
@@ -43,4 +45,9 @@ void Character::OnKeyPressed(const int& key)
 		pos.x -= 20;
 		bone->mBoneOffset = glm::translate(glm::mat4(1.0f), pos);
 	}*/
+
+	if (key == GLFW_KEY_SPACE)
+	{
+		mIsPlaying = !mIsPlaying;
+	}
 }

@@ -133,16 +133,21 @@ void AnimationSystem::HandleEventInvoke(BaseAnimationHelper* animObject)
 	}*/
 }
 
-void AnimationSystem::HandleKeyFrames_Vector3(double time, std::vector<BaseKeyFrame<glm::vec3>>& keyFrames, 
+glm::vec3 AnimationSystem::HandleKeyFrames_Vector3(double time, std::vector<BaseKeyFrame<glm::vec3>>& keyFrames, 
 	std::function<void(glm::vec3)> OnValueApply, std::function<void(glm::vec4)>OnColorChange)
 {
-	if (keyFrames.size() == 0) return;
+	if (keyFrames.size() == 0) return glm::vec3(0);
 
 	if (keyFrames.size() == 1)
 	{
-		OnValueApply(keyFrames[0].mValue);
+		if (OnValueApply != nullptr)
+		{
+			OnValueApply(keyFrames[0].mValue);
+		}
+
 		if (OnColorChange != nullptr) { OnColorChange(glm::vec4(1)); }
-		return;
+
+		return keyFrames[0].mValue;
 	}
 
 	int keyFrameEndIndex = 0;
@@ -156,10 +161,13 @@ void AnimationSystem::HandleKeyFrames_Vector3(double time, std::vector<BaseKeyFr
 
 	if (keyFrameEndIndex >= keyFrames.size())
 	{
-		OnValueApply(keyFrames[keyFrameEndIndex-1].mValue);
+		if (OnValueApply != nullptr)
+		{
+			OnValueApply(keyFrames[keyFrameEndIndex - 1].mValue);
+		}
 
 		if (OnColorChange != nullptr) { OnColorChange(glm::vec4(1)); }
-		return;
+		return keyFrames[keyFrameEndIndex - 1].mValue;
 	}
 
 	int keyFrameStartIndex = keyFrameEndIndex - 1;
@@ -203,20 +211,33 @@ void AnimationSystem::HandleKeyFrames_Vector3(double time, std::vector<BaseKeyFr
 	}
 
 	glm::vec3 delta = endKeyFrame.mValue - startKeyFrame.mValue;
-	OnValueApply(startKeyFrame.mValue + delta * result);
+
+	glm::vec3 endValue = startKeyFrame.mValue + delta * result;
+
+	if (OnValueApply != nullptr)
+	{
+		OnValueApply(endValue);
+	}
+	
+	return endValue;
 
 }
 
-void AnimationSystem::HandleKeyFrames_Quaternion(double time, std::vector<BaseKeyFrame<glm::vec3>>& keyFrames,
+glm::quat AnimationSystem::HandleKeyFrames_Quaternion(double time, std::vector<BaseKeyFrame<glm::vec3>>& keyFrames,
 	std::function<void(glm::quat)> OnValueApply, std::function<void(glm::vec4)>OnColorChange)
 {
-	if (keyFrames.size() == 0) return;
+	if (keyFrames.size() == 0) return glm::quat(glm::radians(glm::vec3(0)));
 
 	if (keyFrames.size() == 1)
 	{
 		glm::quat quaternionRotation = glm::quat(glm::radians(keyFrames[0].mValue));
-		OnValueApply(quaternionRotation);
-		return;
+
+		if (OnValueApply != nullptr)
+		{
+			OnValueApply(quaternionRotation);
+		}
+		
+		return quaternionRotation;
 	}
 
 	int keyFrameEndIndex = 0;
@@ -231,8 +252,13 @@ void AnimationSystem::HandleKeyFrames_Quaternion(double time, std::vector<BaseKe
 	if (keyFrameEndIndex >= keyFrames.size())
 	{
 		glm::quat quaternionRotation = glm::quat(glm::radians(keyFrames[keyFrameEndIndex - 1].mValue));
-		OnValueApply(quaternionRotation);
-		return;
+
+
+		if (OnValueApply != nullptr)
+		{
+			OnValueApply(quaternionRotation);
+		}
+		return quaternionRotation;
 	}
 
 	int keyFrameStartIndex = keyFrameEndIndex - 1;
@@ -270,7 +296,12 @@ void AnimationSystem::HandleKeyFrames_Quaternion(double time, std::vector<BaseKe
 
 	glm::quat quaternionRotation = glm::slerp(startRotation, endRotation, result);
 	
-	OnValueApply(quaternionRotation);
+	if (OnValueApply != nullptr)
+	{
+		OnValueApply(quaternionRotation);
+	}
+
+	return quaternionRotation;
 }
 
 

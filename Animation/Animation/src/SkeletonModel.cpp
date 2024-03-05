@@ -9,7 +9,7 @@ using namespace MathUtilities;
 
 SkeletonModel::SkeletonModel() : Model()
 {
-	AnimationSystem::GetInstance().AddAnimatedObject(this);
+	//AnimationSystem::GetInstance().AddAnimatedObject(this);
 }
 
 SkeletonModel::SkeletonModel(const std::string& path, bool debugModel) : Model(path, debugModel)
@@ -44,6 +44,43 @@ void SkeletonModel::SetBaseColor(const glm::vec4& color)
 	}
 }
 
+void SkeletonModel::Update(float deltaTime)
+{
+	if (!mIsPlaying) return;
+
+	mCurrentTime += deltaTime;
+
+	AnimateNodes(deltaTime);
+}
+
+void SkeletonModel::LoadAndAddAnimationClip(const std::string& path, const std::string& animName)
+{
+	Assimp::Importer importer;
+
+	SkeletalAnimation* newAnimation = new SkeletalAnimation();
+
+	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate);
+	assert(scene && scene->mAnimations[0]);
+	aiAnimation* animation = scene->mAnimations[0];
+	newAnimation->mDuration = animation->mDuration;
+	newAnimation->mTicksPerSecond = animation->mTicksPerSecond;
+	newAnimation->mName = scene->mRootNode->mName.C_Str();
+
+	int channelSize = animation->mNumChannels;
+
+	for (int i = 0; i < channelSize; i++)
+	{
+		aiNodeAnim* channel = animation->mChannels[i];
+		NodeAnim* nodeAnim = new NodeAnim(channel->mNodeName.C_Str(), channel);
+		newAnimation->Channels.push_back(nodeAnim);
+	}
+
+	mListOfSkeletalAnimations[newAnimation->mName] = newAnimation;
+
+	mCurrentAnimation = newAnimation;
+
+}
+
 MeshAndMaterial* SkeletonModel::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 {
 	std::vector<Vertex> vertices;
@@ -51,8 +88,10 @@ MeshAndMaterial* SkeletonModel::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 
 	RootNodeInfo* rootNodeInfo  = new RootNodeInfo();
 
-	rootNodeInfo->mRootNode = GenerateBoneHeirachy(scene->mRootNode);
+	rootNodeInfo->mRootNode = GenerateBoneHeirachy(rootNodeInfo, scene->mRootNode);
 	GlobalInverseTransformation = glm::inverse(rootNodeInfo->mRootNode->mNodeTransformation);
+
+
 #pragma region Bones
 
 	std::vector<BoneWeightInfo> boneInfos;
@@ -102,7 +141,6 @@ MeshAndMaterial* SkeletonModel::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 	}
 
 #pragma endregion
-
 
 #pragma region Vertices
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
@@ -187,7 +225,6 @@ MeshAndMaterial* SkeletonModel::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 
 #pragma endregion
 
-
 #pragma region Material
 
 	BaseMaterial* meshMat;
@@ -233,19 +270,21 @@ MeshAndMaterial* SkeletonModel::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 	return new MeshAndMaterial{ meshInstance, meshMat };
 }
 
-HeirarchyNode* SkeletonModel::GenerateBoneHeirachy(aiNode* node)
+HeirarchyNode* SkeletonModel::GenerateBoneHeirachy(RootNodeInfo* rootNodeInfo, aiNode* node)
 {
 	HeirarchyNode* boneNode = CreateBoneNode(node);
+
+	rootNodeInfo->mListOfNodes[boneNode->mName] = boneNode;
+
 	//Debugger::Print("Bone Name : ", boneNode->mName);
 
 	for (int i = 0; i < node->mNumChildren; i++)
 	{
-		boneNode->Children.emplace_back(GenerateBoneHeirachy(node->mChildren[i]));
+		boneNode->Children.emplace_back(GenerateBoneHeirachy(rootNodeInfo, node->mChildren[i]));
 	}
 
 	return boneNode;
 }
-
 
 void SkeletonModel::DrawShaded(MeshAndMaterial* mesh, Shader* shader)
 {
@@ -294,3 +333,49 @@ void SkeletonModel::CalcualteNodeMatricses(RootNodeInfo* meshRootNodeInfo, Heira
 
 }
 
+float SkeletonModel::GetScaleFactor(float lastTimeStamp, float nextTimeStamp, float animationTime)
+{
+	float scaleFactor = 0.0f;
+	float midWayLength = animationTime - lastTimeStamp;
+	float framesDiff = nextTimeStamp - lastTimeStamp;
+	scaleFactor = midWayLength / framesDiff;
+	return scaleFactor;
+}
+
+void SkeletonModel::AnimateNodes(float deltaTime)
+{
+	std::unordered_map<std::string, BoneInfo>& mListOfBoneInfos = mListOfMeshRootNodes[meshes[0]->mesh]->mListOfBoneInfos;
+	std::unordered_map<std::string, HeirarchyNode*>& mListOfNodes = mListOfMeshRootNodes[meshes[0]->mesh]->mListOfNodes;
+
+	//for (int i = 0; i < mCurrentAnimation->Channels.size(); ++i)
+	for(NodeAnim* nodeAnim : mCurrentAnimation->Channels)
+	{
+		std::string boneName = nodeAnim->mName;
+
+		std::unordered_map<std::string, BoneInfo>::iterator boneInfoIt = mListOfBoneInfos.find(boneName);
+		std::unordered_map<std::string, HeirarchyNode*>::iterator boneNodeIt = mListOfNodes.find(boneName);
+
+		if (boneInfoIt == mListOfBoneInfos.end()) continue;
+		if (boneNodeIt == mListOfNodes.end()) continue;
+
+		BoneInfo& boneInfo = boneInfoIt->second;
+		HeirarchyNode* node = boneNodeIt->second;
+
+		glm::vec3 animatedPos = AnimationSystem::GetInstance().HandleKeyFrames_Vector3(
+			mCurrentTime, nodeAnim->mListOfPositionKeyFrames
+		);
+
+		glm::quat animatedRot = AnimationSystem::GetInstance().HandleKeyFrames_Quaternion(
+			mCurrentTime, nodeAnim->mListOfRotationKeyFrames
+		);
+
+		glm::vec3 animatedScale = AnimationSystem::GetInstance().HandleKeyFrames_Vector3(
+			mCurrentTime, nodeAnim->mListOfScaleKeyFrames
+		);
+
+		node->mNodeTransformation = glm::translate(glm::mat4(1.0f), animatedPos)
+			* glm::toMat4(animatedRot)
+			* glm::scale(glm::mat4(1.0f), animatedScale);
+
+	}
+}
