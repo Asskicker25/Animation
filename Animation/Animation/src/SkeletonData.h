@@ -55,6 +55,14 @@ struct NodeAnim
 	std::vector<BaseKeyFrame<glm::vec3>> mListOfScaleKeyFrames;
 
 	void AddKeyFrame(const glm::vec3& value, float time, EasingType easingType);
+
+	float GetScaleFactor(float lastTimeStamp, float nextTimeStamp, float animationTime);
+
+	int GetPositionIndex(float animationTime);
+	int GetRotationIndex(float animationTime);
+	int GetScaleIndex(float animationTime);
+	
+	glm::mat4 InterpolatePosition(float time);
 };
 
 struct SkeletalAnimation

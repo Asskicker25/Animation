@@ -32,7 +32,6 @@ private:
 	glm::mat4 GlobalInverseTransformation;
 	SkeletalAnimation* mCurrentAnimation = nullptr;
 
-	float GetScaleFactor(float lastTimeStamp, float nextTimeStamp, float animationTime);
 
 	HeirarchyNode* GenerateBoneHeirachy(RootNodeInfo* rootNodeInfo, aiNode* node);
 	void CalcualteNodeMatricses(RootNodeInfo* meshRootNodeInfo, HeirarchyNode* node, glm::mat4& parentTransformationMatrix, std::vector<glm::mat4>& matArray);

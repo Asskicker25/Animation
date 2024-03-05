@@ -9,7 +9,7 @@ using namespace MathUtilities;
 
 SkeletonModel::SkeletonModel() : Model()
 {
-	//AnimationSystem::GetInstance().AddAnimatedObject(this);
+	AnimationSystem::GetInstance().AddAnimatedObject(this);
 }
 
 SkeletonModel::SkeletonModel(const std::string& path, bool debugModel) : Model(path, debugModel)
@@ -48,7 +48,11 @@ void SkeletonModel::Update(float deltaTime)
 {
 	if (!mIsPlaying) return;
 
-	mCurrentTime += deltaTime;
+	if (deltaTime > 1.0f / 60.0f) { deltaTime = 1.0f / 60.0f; }
+
+	mCurrentTime += deltaTime * 30;
+
+	//Debugger::Print("Current Time :", mCurrentTime);
 
 	AnimateNodes(deltaTime);
 }
@@ -320,7 +324,7 @@ void SkeletonModel::CalcualteNodeMatricses(RootNodeInfo* meshRootNodeInfo, Heira
 	{
 		BoneInfo& boneInfo = it->second;
 
-		boneInfo.mFinalTransformation = /*GlobalInverseTransformation **/ globalTransformation * boneInfo.mBoneOffset;
+		boneInfo.mFinalTransformation = GlobalInverseTransformation * globalTransformation * boneInfo.mBoneOffset;
 		boneInfo.mGlobalTransformation = globalTransformation;
 
 		matArray[boneInfo.boneId] = boneInfo.mFinalTransformation;
@@ -333,14 +337,7 @@ void SkeletonModel::CalcualteNodeMatricses(RootNodeInfo* meshRootNodeInfo, Heira
 
 }
 
-float SkeletonModel::GetScaleFactor(float lastTimeStamp, float nextTimeStamp, float animationTime)
-{
-	float scaleFactor = 0.0f;
-	float midWayLength = animationTime - lastTimeStamp;
-	float framesDiff = nextTimeStamp - lastTimeStamp;
-	scaleFactor = midWayLength / framesDiff;
-	return scaleFactor;
-}
+
 
 void SkeletonModel::AnimateNodes(float deltaTime)
 {
@@ -348,6 +345,7 @@ void SkeletonModel::AnimateNodes(float deltaTime)
 	std::unordered_map<std::string, HeirarchyNode*>& mListOfNodes = mListOfMeshRootNodes[meshes[0]->mesh]->mListOfNodes;
 
 	//for (int i = 0; i < mCurrentAnimation->Channels.size(); ++i)
+	int i = 0;
 	for(NodeAnim* nodeAnim : mCurrentAnimation->Channels)
 	{
 		std::string boneName = nodeAnim->mName;
@@ -377,5 +375,11 @@ void SkeletonModel::AnimateNodes(float deltaTime)
 			* glm::toMat4(animatedRot)
 			* glm::scale(glm::mat4(1.0f), animatedScale);
 
+		if (i == 0)
+		{
+			Debugger::Print("Node 1 Pos : ", animatedPos);
+		}
+
+			i++;
 	}
 }

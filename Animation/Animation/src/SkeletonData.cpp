@@ -67,6 +67,7 @@ void NodeAnim::AddKeyFrame(const glm::vec3& value, float time, EasingType easing
 	}
 }
 
+
 NodeAnim::NodeAnim(const std::string& name, const aiNodeAnim* channel) : mName{ name }
 {
 	currentKeyType = POSITION;
@@ -75,6 +76,8 @@ NodeAnim::NodeAnim(const std::string& name, const aiNodeAnim* channel) : mName{ 
 		aiVector3D aiPosition = channel->mPositionKeys[posIndex].mValue;
 		float timeStamp = channel->mPositionKeys[posIndex].mTime;
 		glm::vec3 pos = AssimpToGLM(aiPosition);
+
+		Debugger::Print("Pos Time : " + std::to_string(posIndex), timeStamp);
 
 		AddKeyFrame(pos, timeStamp, EasingType::Linear);
 	}
@@ -103,3 +106,57 @@ NodeAnim::NodeAnim(const std::string& name, const aiNodeAnim* channel) : mName{ 
 }
 
 
+float NodeAnim::GetScaleFactor(float lastTimeStamp, float nextTimeStamp, float animationTime)
+{
+	float scaleFactor = 0.0f;
+	float midWayLength = animationTime - lastTimeStamp;
+	float framesDiff = nextTimeStamp - lastTimeStamp;
+	scaleFactor = midWayLength / framesDiff;
+	return scaleFactor;
+}
+
+int NodeAnim::GetPositionIndex(float animationTime)
+{
+	for (int index = 0; index < mListOfPositionKeyFrames.size() - 1; ++index)
+	{
+		if (animationTime < mListOfPositionKeyFrames[index + 1].mTime)
+			return index;
+	}
+	assert(0);
+}
+
+int NodeAnim::GetRotationIndex(float animationTime)
+{
+	for (int index = 0; index < mListOfRotationKeyFrames.size() - 1; ++index)
+	{
+		if (animationTime < mListOfRotationKeyFrames[index + 1].mTime)
+			return index;
+	}
+	assert(0);
+}
+
+int NodeAnim::GetScaleIndex(float animationTime)
+{
+	for (int index = 0; index < mListOfPositionKeyFrames.size() - 1; ++index)
+	{
+		if (animationTime < mListOfPositionKeyFrames[index + 1].mTime)
+			return index;
+	}
+	assert(0);
+}
+
+glm::mat4 NodeAnim::InterpolatePosition(float time)
+{
+	/*if (1 == mListOfPositionKeyFrames.size())
+		return glm::translate(glm::mat4(1.0f), mListOfPositionKeyFrames[0].mValue);
+
+	int p0Index = GetPositionIndex(animationTime);
+	int p1Index = p0Index + 1;
+	float scaleFactor = GetScaleFactor(m_Positions[p0Index].timeStamp,
+		m_Positions[p1Index].timeStamp, animationTime);
+	glm::vec3 finalPosition = glm::mix(m_Positions[p0Index].position,
+		m_Positions[p1Index].position, scaleFactor);
+	return glm::translate(glm::mat4(1.0f), finalPosition);*/
+
+	return glm::mat4(1.0);
+}

@@ -16,12 +16,12 @@ Character::Character()
 
 	LoadAndAddAnimationClip("Assets/Animations/Taunt.fbx", "Taunt");
 
-	/*AnimationClip* clip1 = new AnimationClip();
+	AnimationClip* clip1 = new AnimationClip();
 	clip1->SetCurrentKeyType(POSITION);
 	clip1->AddKeyFrame(glm::vec3(0, 0.0f, 0), 0);
 	clip1->AddKeyFrame(glm::vec3(5, 0.0f, 0), 5.0f, SineEaseIn);
 
-	AddAnimationClip(clip1);*/
+	AddAnimationClip(clip1);
 
 	InputManager::GetInstance().AddListener(this);
 
