@@ -15,42 +15,41 @@ Character::Character()
 	meshes[0]->material->AsMaterial()->diffuseTexture = new Texture("Assets/Models/RaceDriver.png");
 	transform.SetScale(glm::vec3(0.08f));
 
-	//LoadAndAddAnimationClip("Assets/Models/RaceDriver_Blender.fbx", "Taunt");
-	LoadAndAddAnimationClip("Assets/Models/RaceDriver_ChickenDance.fbx", "Taunt");
+	LoadAndAddAnimationClip("Assets/Animations/Taunt.fbx", "Taunt");
+	LoadAndAddAnimationClip("Assets/Animations/ChickenDance.fbx", "ChickenDance");
+	LoadAndAddAnimationClip("Assets/Animations/SillyDancing.fbx", "SillyDancing");
+	LoadAndAddAnimationClip("Assets/Animations/TakeDown.fbx", "TakeDown");
+	LoadAndAddAnimationClip("Assets/Animations/Stretching.fbx", "Stretching");
 	//LoadAndAddAnimationClip("Assets/Models/RiggedCube_Anim.fbx", "Test");
 
-	/*AnimationClip* clip1 = new AnimationClip();
-	clip1->SetCurrentKeyType(POSITION);
-	clip1->AddKeyFrame(glm::vec3(0, 0.0f, 0), 0);
-	clip1->AddKeyFrame(glm::vec3(5, 0.0f, 0), 5.0f, SineEaseIn);
-
-	AddAnimationClip(clip1);*/
-
 	InputManager::GetInstance().AddListener(this);
-
-	/*std::unordered_map<std::string, BoneInfo>::iterator it = 
-		mListOfMeshRootNodes[meshes[0]->mesh]->mListOfBoneInfos.find("mixamorig6:Head");*/
-
-	//bone = &it->second;
-	//pos = glm::vec3(0,-150,0);
-	//bone->mBoneOffset = glm::translate(glm::mat4(1.0f), pos);
+	
 }
 
 void Character::OnKeyPressed(const int& key)
 {
-	/*if (key == GLFW_KEY_D)
-	{
-		pos.x += 20;
-		bone->mBoneOffset = glm::translate(glm::mat4(1.0f), pos);
-	}
-	else if(key == GLFW_KEY_A)
-	{
-		pos.x -= 20;
-		bone->mBoneOffset = glm::translate(glm::mat4(1.0f), pos);
-	}*/
-
 	if (key == GLFW_KEY_SPACE)
 	{
 		mIsPlaying = !mIsPlaying;
+	}
+	else if (key == GLFW_KEY_1)
+	{
+		PlayAnimation("Taunt");
+	}
+	else if (key == GLFW_KEY_2)
+	{
+		PlayAnimation("ChickenDance");
+	}
+	else if (key == GLFW_KEY_3)
+	{
+		PlayAnimation("SillyDancing");
+	}
+	else if (key == GLFW_KEY_4)
+	{
+		PlayAnimation("TakeDown");
+	}
+	else if (key == GLFW_KEY_5)
+	{
+		PlayAnimation("Stretching");
 	}
 }

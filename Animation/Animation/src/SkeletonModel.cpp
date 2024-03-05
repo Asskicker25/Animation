@@ -84,7 +84,7 @@ void SkeletonModel::LoadAndAddAnimationClip(const std::string& path, const std::
 		newAnimation->Channels.push_back(nodeAnim);
 	}
 
-	mListOfSkeletalAnimations[newAnimation->mName] = newAnimation;
+	mListOfSkeletalAnimations[animName] = newAnimation;
 
 	mCurrentAnimation = newAnimation;
 
@@ -329,7 +329,7 @@ void SkeletonModel::CalcualteNodeMatricses(RootNodeInfo* meshRootNodeInfo, Heira
 	{
 		BoneInfo& boneInfo = it->second;
 
-		boneInfo.mFinalTransformation = GlobalInverseTransformation * globalTransformation * boneInfo.mBoneOffset;
+		boneInfo.mFinalTransformation = /*GlobalInverseTransformation **/ globalTransformation * boneInfo.mBoneOffset;
 		boneInfo.mGlobalTransformation = globalTransformation;
 
 		matArray[boneInfo.boneId] = boneInfo.mFinalTransformation;
@@ -387,4 +387,10 @@ void SkeletonModel::AnimateNodes(float deltaTime)
 
 			i++;
 	}
+}
+
+void SkeletonModel::PlayAnimation(const std::string& name)
+{
+	mCurrentAnimation = mListOfSkeletalAnimations[name];
+	mCurrentTime = 0;
 }

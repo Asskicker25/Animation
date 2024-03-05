@@ -28,6 +28,11 @@ void Scene_One::Start()
 	mDirLight->InitializeLight(Directional);
 	mDirLight->intensity = 0.7;
 
+	Model* floor = new Model("res/Models/DefaultQuad.fbx");
+	floor->transform.SetPosition(glm::vec3(0));
+	floor->transform.SetRotation(glm::vec3(90,0,0));
+	floor->transform.SetScale(glm::vec3(50));
+
 	Character* character = new Character();
 
 	AnimationSystem::GetInstance().TogglePlayAndPause();

@@ -80,6 +80,7 @@ in vec2 TexCoord;
 in vec3 Normal;
 in vec3 FragPos;
 in vec4 VertexColor;
+in vec4 BoneId;
 
 uniform Material material;
 

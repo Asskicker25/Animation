@@ -25,6 +25,8 @@ public:
 	void LoadAndAddAnimationClip(const std::string& path, const std::string& animName);
 	void AnimateNodes(float deltaTime);
 
+	void PlayAnimation(const std::string& name);
+
 	bool mIsPlaying = false;
 	float mCurrentTime = 0;
 
