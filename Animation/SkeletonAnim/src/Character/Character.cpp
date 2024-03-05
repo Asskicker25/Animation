@@ -10,18 +10,20 @@ Character::Character()
 	shader = Shaders::GetInstance().mBoneAnimationShader;
 	//character->LoadModel("Assets/Models/Character_Idle.fbx");
 	//character->LoadModel("Assets/Models/Ninja.fbx");
-	LoadModel("Assets/Models/RaceDriver.fbx");
+	LoadModel("Assets/Models/RiggedCube_Anim.fbx");
+	//LoadModel("Assets/Models/RaceDriver.fbx");
 	meshes[0]->material->AsMaterial()->diffuseTexture = new Texture("Assets/Models/RaceDriver.png");
 	transform.SetScale(glm::vec3(0.08f));
 
-	LoadAndAddAnimationClip("Assets/Animations/Taunt.fbx", "Taunt");
+	//LoadAndAddAnimationClip("Assets/Animations/Taunt.fbx", "Taunt");
+	LoadAndAddAnimationClip("Assets/Models/RiggedCube_Anim.fbx", "Test");
 
-	AnimationClip* clip1 = new AnimationClip();
+	/*AnimationClip* clip1 = new AnimationClip();
 	clip1->SetCurrentKeyType(POSITION);
 	clip1->AddKeyFrame(glm::vec3(0, 0.0f, 0), 0);
 	clip1->AddKeyFrame(glm::vec3(5, 0.0f, 0), 5.0f, SineEaseIn);
 
-	AddAnimationClip(clip1);
+	AddAnimationClip(clip1);*/
 
 	InputManager::GetInstance().AddListener(this);
 

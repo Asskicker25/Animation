@@ -9,7 +9,7 @@ using namespace MathUtilities;
 
 SkeletonModel::SkeletonModel() : Model()
 {
-	AnimationSystem::GetInstance().AddAnimatedObject(this);
+	//AnimationSystem::GetInstance().AddAnimatedObject(this);
 }
 
 SkeletonModel::SkeletonModel(const std::string& path, bool debugModel) : Model(path, debugModel)
@@ -50,7 +50,7 @@ void SkeletonModel::Update(float deltaTime)
 
 	if (deltaTime > 1.0f / 60.0f) { deltaTime = 1.0f / 60.0f; }
 
-	mCurrentTime += deltaTime * 30;
+	mCurrentTime += deltaTime * 1000;
 
 	//Debugger::Print("Current Time :", mCurrentTime);
 
