@@ -52,6 +52,11 @@ void SkeletonModel::Update(float deltaTime)
 
 	mCurrentTime += deltaTime * 1000;
 
+	if (mCurrentTime > mCurrentAnimation->mDuration)
+	{
+		mCurrentTime = 0;
+	}
+
 	//Debugger::Print("Current Time :", mCurrentTime);
 
 	AnimateNodes(deltaTime);
@@ -375,10 +380,10 @@ void SkeletonModel::AnimateNodes(float deltaTime)
 			* glm::toMat4(animatedRot)
 			* glm::scale(glm::mat4(1.0f), animatedScale);
 
-		if (i == 0)
+		/*if (i == 0)
 		{
 			Debugger::Print("Node 1 Pos : ", animatedPos);
-		}
+		}*/
 
 			i++;
 	}

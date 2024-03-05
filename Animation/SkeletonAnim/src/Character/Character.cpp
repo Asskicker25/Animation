@@ -15,7 +15,8 @@ Character::Character()
 	meshes[0]->material->AsMaterial()->diffuseTexture = new Texture("Assets/Models/RaceDriver.png");
 	transform.SetScale(glm::vec3(0.08f));
 
-	LoadAndAddAnimationClip("Assets/Models/RaceDriver_Blender.fbx", "Taunt");
+	//LoadAndAddAnimationClip("Assets/Models/RaceDriver_Blender.fbx", "Taunt");
+	LoadAndAddAnimationClip("Assets/Models/RaceDriver_ChickenDance.fbx", "Taunt");
 	//LoadAndAddAnimationClip("Assets/Models/RiggedCube_Anim.fbx", "Test");
 
 	/*AnimationClip* clip1 = new AnimationClip();
