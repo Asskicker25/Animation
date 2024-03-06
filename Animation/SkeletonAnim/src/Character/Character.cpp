@@ -11,17 +11,17 @@ Character::Character() : PhysicsSkeletonObject()
 	//character->LoadModel("Assets/Models/Character_Idle.fbx");
 	//character->LoadModel("Assets/Models/Ninja.fbx");
 	//LoadModel("Assets/Models/RiggedCube_Anim.fbx");
-	LoadModel("Assets/Models/RaceDriver_Blender.fbx");
-	meshes[0]->material->AsMaterial()->diffuseTexture = new Texture("Assets/Models/RaceDriver.png");
+	LoadModel("Assets/Models/Player.fbx");
+	//meshes[0]->material->AsMaterial()->diffuseTexture = new Texture("Assets/Models/RaceDriver.png");
 	transform.SetScale(glm::vec3(0.08f));
 
 	InitializePhysics(AABB, DYNAMIC);
 
-	LoadAndAddAnimationClip("Assets/Animations/Taunt.fbx", "Taunt");
-	LoadAndAddAnimationClip("Assets/Animations/ChickenDance.fbx", "ChickenDance");
+	LoadAndAddAnimationClip("Assets/Animations/Player_Run.fbx", "Taunt");
+	/*LoadAndAddAnimationClip("Assets/Animations/ChickenDance.fbx", "ChickenDance");
 	LoadAndAddAnimationClip("Assets/Animations/SillyDancing.fbx", "SillyDancing");
 	LoadAndAddAnimationClip("Assets/Animations/TakeDown.fbx", "TakeDown");
-	LoadAndAddAnimationClip("Assets/Animations/Stretching.fbx", "Stretching");
+	LoadAndAddAnimationClip("Assets/Animations/Stretching.fbx", "Stretching");*/
 	//LoadAndAddAnimationClip("Assets/Models/RiggedCube_Anim.fbx", "Test");
 
 	InputManager::GetInstance().AddListener(this);

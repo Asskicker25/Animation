@@ -20,7 +20,7 @@ void AnimationApplication::SetUp()
 
 void AnimationApplication::Update()
 {
-	PhysicsEngine::GetInstance().Update(Timer::GetInstance().deltaTime);
+	//PhysicsEngine::GetInstance().Update(Timer::GetInstance().deltaTime);
 }
 
 void AnimationApplication::Render()

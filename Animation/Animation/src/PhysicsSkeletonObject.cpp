@@ -348,47 +348,52 @@ void PhysicsSkeletonObject::CalcualteNodeMatricses(RootNodeInfo* meshRootNodeInf
 
 void PhysicsSkeletonObject::AnimateNodes(float deltaTime)
 {
-	std::unordered_map<std::string, BoneInfo>& mListOfBoneInfos = mListOfMeshRootNodes[meshes[0]->mesh]->mListOfBoneInfos;
-	std::unordered_map<std::string, HeirarchyNode*>& mListOfNodes = mListOfMeshRootNodes[meshes[0]->mesh]->mListOfNodes;
-
-	//for (int i = 0; i < mCurrentAnimation->Channels.size(); ++i)
-	int i = 0;
-	for (NodeAnim* nodeAnim : mCurrentAnimation->Channels)
+	for (MeshAndMaterial* mesh : meshes)
 	{
-		std::string boneName = nodeAnim->mName;
+		std::unordered_map<std::string, BoneInfo>& mListOfBoneInfos = mListOfMeshRootNodes[mesh->mesh]->mListOfBoneInfos;
+		std::unordered_map<std::string, HeirarchyNode*>& mListOfNodes = mListOfMeshRootNodes[mesh->mesh]->mListOfNodes;
 
-		std::unordered_map<std::string, BoneInfo>::iterator boneInfoIt = mListOfBoneInfos.find(boneName);
-		std::unordered_map<std::string, HeirarchyNode*>::iterator boneNodeIt = mListOfNodes.find(boneName);
-
-		if (boneInfoIt == mListOfBoneInfos.end()) continue;
-		if (boneNodeIt == mListOfNodes.end()) continue;
-
-		BoneInfo& boneInfo = boneInfoIt->second;
-		HeirarchyNode* node = boneNodeIt->second;
-
-		glm::vec3 animatedPos = AnimationSystem::GetInstance().HandleKeyFrames_Vector3(
-			mCurrentTime, nodeAnim->mListOfPositionKeyFrames
-		);
-
-		glm::quat animatedRot = AnimationSystem::GetInstance().HandleKeyFrames_Quaternion(
-			mCurrentTime, nodeAnim->mListOfRotationKeyFrames
-		);
-
-		glm::vec3 animatedScale = AnimationSystem::GetInstance().HandleKeyFrames_Vector3(
-			mCurrentTime, nodeAnim->mListOfScaleKeyFrames
-		);
-
-		node->mNodeTransformation = glm::translate(glm::mat4(1.0f), animatedPos)
-			* glm::toMat4(animatedRot)
-			* glm::scale(glm::mat4(1.0f), animatedScale);
-
-		/*if (i == 0)
+		//for (int i = 0; i < mCurrentAnimation->Channels.size(); ++i)
+		int i = 0;
+		for (NodeAnim* nodeAnim : mCurrentAnimation->Channels)
 		{
-			Debugger::Print("Node 1 Pos : ", animatedPos);
-		}*/
+			std::string boneName = nodeAnim->mName;
 
-		i++;
+			std::unordered_map<std::string, BoneInfo>::iterator boneInfoIt = mListOfBoneInfos.find(boneName);
+			std::unordered_map<std::string, HeirarchyNode*>::iterator boneNodeIt = mListOfNodes.find(boneName);
+
+			if (boneInfoIt == mListOfBoneInfos.end()) continue;
+			if (boneNodeIt == mListOfNodes.end()) continue;
+
+			BoneInfo& boneInfo = boneInfoIt->second;
+			HeirarchyNode* node = boneNodeIt->second;
+
+			glm::vec3 animatedPos = AnimationSystem::GetInstance().HandleKeyFrames_Vector3(
+				mCurrentTime, nodeAnim->mListOfPositionKeyFrames
+			);
+
+			glm::quat animatedRot = AnimationSystem::GetInstance().HandleKeyFrames_Quaternion(
+				mCurrentTime, nodeAnim->mListOfRotationKeyFrames
+			);
+
+			glm::vec3 animatedScale = AnimationSystem::GetInstance().HandleKeyFrames_Vector3(
+				mCurrentTime, nodeAnim->mListOfScaleKeyFrames
+			);
+
+			node->mNodeTransformation = glm::translate(glm::mat4(1.0f), animatedPos)
+				* glm::toMat4(animatedRot)
+				* glm::scale(glm::mat4(1.0f), animatedScale);
+
+			/*if (i == 0)
+			{
+				Debugger::Print("Node 1 Pos : ", animatedPos);
+			}*/
+
+			i++;
+		}
 	}
+
+
 }
 
 void PhysicsSkeletonObject::PlayAnimation(const std::string& name)
