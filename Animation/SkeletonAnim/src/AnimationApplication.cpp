@@ -1,4 +1,5 @@
 #include "AnimationApplication.h"
+#include <Physics/PhysicsEngine.h>
 
 void AnimationApplication::SetUp()
 {
@@ -9,6 +10,8 @@ void AnimationApplication::SetUp()
 
 	EditorLayout::GetInstance().SetMaximizeState(true);
 
+	//PhysicsEngine::GetInstance().gravity.y = -9.8f / 3.0f;
+
 	sceneOne = new Scene_One(this);
 
 	SceneManager::GetInstance().AddScene("SceneOne", sceneOne);
@@ -17,6 +20,7 @@ void AnimationApplication::SetUp()
 
 void AnimationApplication::Update()
 {
+	PhysicsEngine::GetInstance().Update(Timer::GetInstance().deltaTime);
 }
 
 void AnimationApplication::Render()

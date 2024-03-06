@@ -11,8 +11,8 @@ public:
 	glm::vec4 boneWeights;
 	glm::vec4 boneIds;
 
-
 	float enabled = 0;
+
 	/*glm::vec3 tangents;
 	glm::vec3 bitTangents;*/
 };

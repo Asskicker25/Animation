@@ -5,7 +5,7 @@ BoneInfo* bone;
 
 glm::vec3 pos, rot, scale;
 
-Character::Character()
+Character::Character() : PhysicsSkeletonObject()
 {
 	shader = Shaders::GetInstance().mBoneAnimationShader;
 	//character->LoadModel("Assets/Models/Character_Idle.fbx");
@@ -14,6 +14,8 @@ Character::Character()
 	LoadModel("Assets/Models/RaceDriver_Blender.fbx");
 	meshes[0]->material->AsMaterial()->diffuseTexture = new Texture("Assets/Models/RaceDriver.png");
 	transform.SetScale(glm::vec3(0.08f));
+
+	InitializePhysics(AABB, DYNAMIC);
 
 	LoadAndAddAnimationClip("Assets/Animations/Taunt.fbx", "Taunt");
 	LoadAndAddAnimationClip("Assets/Animations/ChickenDance.fbx", "ChickenDance");

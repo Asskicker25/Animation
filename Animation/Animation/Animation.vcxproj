@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\PhysicsSkeletonObject.h" />
     <ClInclude Include="src\SkeletonData.h" />
     <ClInclude Include="src\SkeletonModel.h" />
     <ClInclude Include="src\KeyFrameEvent.h" />
@@ -30,6 +31,7 @@
     <ClInclude Include="src\BaseAnimationHelper.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\PhysicsSkeletonObject.cpp" />
     <ClCompile Include="src\SkeletonData.cpp" />
     <ClCompile Include="src\SkeletonModel.cpp" />
     <ClCompile Include="src\KeyFrameEvent.cpp" />
