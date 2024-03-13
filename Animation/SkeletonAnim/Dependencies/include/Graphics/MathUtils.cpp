@@ -85,10 +85,10 @@ bool MathUtilities::MathUtils::DecomposeTransform_Simple(const glm::mat4& transf
 	glm::mat3 rotationMatrix = glm::mat3(transform);
 
 
-	// Extract euler angles from the rotation matrix in YXZ order
-	rot.y = glm::degrees(atan2(rotationMatrix[0][2], rotationMatrix[2][2])); // Yaw
-	rot.x = glm::degrees(glm::asin(-rotationMatrix[1][2])); // Pitch
-	rot.z = glm::degrees(atan2(rotationMatrix[1][0], rotationMatrix[1][1])); // Roll
+	 // Extract euler angles from the rotation matrix in XYZ order
+    rot.x = glm::degrees(atan2(rotationMatrix[1][2], rotationMatrix[2][2])); // Pitch
+    rot.y = glm::degrees(glm::asin(-rotationMatrix[0][2])); // Yaw
+    rot.z = glm::degrees(atan2(rotationMatrix[0][1], rotationMatrix[0][0])); // Roll
 
 	scale.x = glm::length(glm::vec3(transform[0]));
 	scale.y = glm::length(glm::vec3(transform[1]));

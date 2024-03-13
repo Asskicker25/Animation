@@ -25,12 +25,12 @@ namespace Verlet
 
 		virtual void InitializeSoftBody();
 
-		virtual void UpdateSoftBody(float deltaTine, CRITICAL_SECTION& criticalSection);
+		virtual void UpdateSoftBody(float deltaTine);
 		virtual void Render();
 		virtual void OnPropertyDraw();
 
 
-		virtual void UpdatModelVertices();
+		virtual void UpdateModelVertices();
 		virtual void UpdateModelNormals();
 
 		void AddForceToRandomNode(glm::vec3 velocity);

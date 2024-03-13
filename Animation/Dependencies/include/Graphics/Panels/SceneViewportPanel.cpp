@@ -70,7 +70,7 @@ void SceneViewportPanel::OnRender(float windowSizeX, float windowSizeY)
 		if (ImGuizmo::IsUsing())
 		{
 			glm::vec3 pos, rot, scale;
-			MathUtils::DecomposeTransform(transform, pos, rot, scale);
+			MathUtils::DecomposeTransform_Simple(transform, pos, rot, scale);
 
 			/*glm::quat newQuat = selectedModel->transform.quaternionRotation * glm::quat(transform);
 			selectedModel->transform.SetQuatRotation(newQuat);*/
@@ -79,7 +79,7 @@ void SceneViewportPanel::OnRender(float windowSizeX, float windowSizeY)
 
 			selectedModel->transform.SetPosition(glm::vec3(pos));
 			selectedModel->transform.SetScale(glm::vec3(scale));
-			selectedModel->transform.SetRotation(glm::vec3(rot));
+			//selectedModel->transform.SetRotation(glm::vec3(rot));
 			/*glm::vec3 delta = rot;
 			glm::vec3 setRotation = selectedModel->transform.rotation + delta;
 			selectedModel->transform.SetRotation(glm::vec3(setRotation));*/

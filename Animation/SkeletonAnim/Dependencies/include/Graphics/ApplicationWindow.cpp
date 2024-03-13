@@ -136,6 +136,9 @@ void ApplicationWindow::InitializeWindow(int windowWidth, int windowHeight)
 	//Debugger::Print("DefShader Shader Id : ", defShader.GetShaderId());
 	defShader.applyInverseModel = true;
 
+	skeletonAnimShader.LoadShader("res/Shader/BoneAnimation.shader");
+	skeletonAnimShader.applyInverseModel = true;
+
 	defInstanceShader.LoadShader("res/Shader/DefaultInstancing.shader", Shader::ALPHA_OPAQUE, false);
 
 	alphaBlendShader.LoadShader("res/Shader/Shader.shader");
@@ -153,6 +156,7 @@ void ApplicationWindow::InitializeWindow(int windowWidth, int windowHeight)
 	Renderer::GetInstance().alphaBlendShader = &alphaBlendShader;
 	Renderer::GetInstance().alphaCutOutShader = &alphaCutOutShader;
 	Renderer::GetInstance().defInstanceShader = &defInstanceShader;
+	Renderer::GetInstance().skeletalAnimShader = &skeletonAnimShader;
 
 	Renderer::GetInstance().camera = viewportCamera;
 
@@ -247,6 +251,7 @@ void ApplicationWindow::EngineRender()
 	debugLines->Clear();
 }
 
+
 void ApplicationWindow::MainLoop()
 {
 	if (imGuiPanelEnable)
@@ -272,7 +277,7 @@ void ApplicationWindow::MainLoop()
 		glfwPollEvents();
 	}
 
-	Shutdown();
+	EngineShutDown();
 
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
@@ -281,6 +286,13 @@ void ApplicationWindow::MainLoop()
 	glfwDestroyWindow(window);
 	glfwTerminate();
 }
+
+void ApplicationWindow::EngineShutDown()
+{
+
+	Shutdown();
+}
+
 
 void ApplicationWindow::RenderForCamera(Camera* camera, FrameBuffer* frameBuffer, bool viewport)
 {
@@ -329,7 +341,7 @@ void ApplicationWindow::SetWindowIcon(const std::string& path)
 {
 	GLFWimage images[1];
 
-	Texture::LoadImage(path.c_str(), images[0]);
+	Texture::LoadTextureImage(path.c_str(), images[0]);
 
 	glfwSetWindowIcon(window, 1, images);
 }

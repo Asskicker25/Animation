@@ -92,10 +92,11 @@ public:
 	DebugCubeData cubeData;
 	DebugLineData lineData;
 
-	UnlitColorShader solidColorShader;
 	Shader defShader;
 	Shader alphaBlendShader;
 	Shader alphaCutOutShader;
+	Shader skeletonAnimShader;
+	UnlitColorShader solidColorShader;
 	UnlitColorShader defInstanceShader;
 	SkyBoxShader skyboxShader;
 
@@ -111,6 +112,7 @@ public:
 
 	void EngineUpdate();
 	void EngineRender();
+	void EngineShutDown();
 	
 	void InitializeWindow(int windowWidth, int windowHeight);
 	void SetWindowIcon(const std::string& path);

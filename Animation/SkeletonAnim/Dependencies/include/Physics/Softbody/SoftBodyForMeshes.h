@@ -11,12 +11,15 @@ namespace Verlet
 
 		virtual void InitializeSoftBody();
 
-		virtual void UpdateSoftBody(float deltaTime, CRITICAL_SECTION& criticalSection);
+		virtual void UpdateSoftBody(float deltaTime);
 		virtual void Render();
 		virtual void OnPropertyDraw();
 
+
 		virtual void UpdateModelVertices();
 		virtual void UpdateModelNormals();
+
+		virtual void ApplyCollision(float deltaTime);
 
 		void AddForceToRandomNode(glm::vec3 velocity);
 
@@ -25,8 +28,6 @@ namespace Verlet
 		//After Initialized
 		void LockNodeAtIndex(int index);
 		void InitializeLockNodes(std::vector<unsigned int> indexToLock);
-
-		CRITICAL_SECTION* mCriticalSection;
 
 	private:
 		void SetupNodes();

@@ -16,7 +16,7 @@ void Character::Initialize()
 	//character->LoadModel("Assets/Models/Character_Idle.fbx");
 	//character->LoadModel("Assets/Models/Ninja.fbx");
 	//LoadModel("Assets/Models/RiggedCube_Anim.fbx");
-	LoadModel("Assets/Models/Player.fbx");
+	LoadModelAsync("Assets/Models/Player.fbx");
 	//meshes[0]->material->AsMaterial()->diffuseTexture = new Texture("Assets/Models/RaceDriver.png");
 	transform.SetScale(glm::vec3(0.08f));
 

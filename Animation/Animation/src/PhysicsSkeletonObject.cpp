@@ -119,11 +119,9 @@ void PhysicsSkeletonObject::LoadAndAddAnimationClip(const std::string& path, con
 
 }
 
-MeshAndMaterial* PhysicsSkeletonObject::ProcessMesh(aiMesh* mesh, const aiScene* scene)
+MeshDataHolder* PhysicsSkeletonObject::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 {
-	std::vector<Vertex> vertices;
-	std::vector<unsigned int> indices;
-
+	MeshDataHolder* meshDataHolder = new MeshDataHolder();
 	RootNodeInfo* rootNodeInfo = new RootNodeInfo();
 
 	rootNodeInfo->mRootNode = GenerateBoneHeirachy(rootNodeInfo, scene->mRootNode);
@@ -246,7 +244,7 @@ MeshAndMaterial* PhysicsSkeletonObject::ProcessMesh(aiMesh* mesh, const aiScene*
 
 		}
 
-		vertices.push_back(vertex);
+		meshDataHolder->vertices.push_back(vertex);
 	}
 
 
@@ -256,7 +254,7 @@ MeshAndMaterial* PhysicsSkeletonObject::ProcessMesh(aiMesh* mesh, const aiScene*
 
 		for (unsigned int j = 0; j < face.mNumIndices; j++)
 		{
-			indices.push_back(face.mIndices[j]);
+			meshDataHolder->indices.push_back(face.mIndices[j]);
 		}
 	}
 
@@ -265,47 +263,38 @@ MeshAndMaterial* PhysicsSkeletonObject::ProcessMesh(aiMesh* mesh, const aiScene*
 
 #pragma region Material
 
-	BaseMaterial* meshMat;
-	aiColor4D baseColor(1.0f, 1.0f, 1.0f, 1.0f);
-
-
 	if (mesh->mMaterialIndex >= 0)
 	{
-		meshMat = new Material();
+		meshDataHolder->hasMaterials = true;
+
 		aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 
-		meshMat->AsMaterial()->diffuseTexture = LoadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
-		meshMat->AsMaterial()->specularTexture = LoadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
-		meshMat->AsMaterial()->alphaMask = LoadMaterialTextures(material, aiTextureType_OPACITY, "texture_opacity");
+		meshDataHolder->diffuseTexture = LoadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+		meshDataHolder->specularTexture = LoadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+		meshDataHolder->alphaTexture = LoadMaterialTextures(material, aiTextureType_OPACITY, "texture_opacity");
 
-		if (((Texture*)meshMat->AsMaterial()->alphaMask)->path != "res/Textures/DefaultTextures/Opacity_Default.png")
+		if (material->GetTextureCount(aiTextureType_OPACITY) != 0)
 		{
-			meshMat->AsMaterial()->useMaskTexture = true;
+			meshDataHolder->useMaskTexture = true;
 		}
-
-		meshMat->AsMaterial()->SetBaseColor(glm::vec4(baseColor.r, baseColor.g, baseColor.b, baseColor.a));
-
 	}
 	else
 	{
-		meshMat = new UnlitColorMaterial();
-		meshMat->AsUnlitMaterial()->SetBaseColor(glm::vec4(baseColor.r, baseColor.g, baseColor.b, baseColor.a));
+		meshDataHolder->hasMaterials = false;
 	}
 
 	std::string meshName = mesh->mName.C_Str();
 
 	if (meshName == "")
 	{
-		meshName = "Mesh " + std::to_string(meshes.size());
+		meshDataHolder->meshName = "Mesh " + std::to_string(meshes.size());
 	}
+
 #pragma endregion
 
+	mListOfMeshRootNodes[meshDataHolder->meshName] = rootNodeInfo;
 
-	std::shared_ptr<Mesh> meshInstance = std::make_shared<Mesh>(vertices, indices, meshName);
-
-	mListOfMeshRootNodes[meshInstance] = rootNodeInfo;
-
-	return new MeshAndMaterial{ meshInstance, meshMat };
+	return meshDataHolder;
 }
 
 HeirarchyNode* PhysicsSkeletonObject::GenerateBoneHeirachy(RootNodeInfo* rootNodeInfo, aiNode* node)
@@ -330,7 +319,7 @@ void PhysicsSkeletonObject::DrawShaded(MeshAndMaterial* mesh, Shader* shader)
 
 	shader->SetUniform1i("useBones", true);
 
-	RootNodeInfo* meshRootNodeInfo = mListOfMeshRootNodes[mesh->mesh];
+	RootNodeInfo* meshRootNodeInfo = mListOfMeshRootNodes[mesh->mesh->name];
 
 	glm::mat4 rootTransformation = glm::mat4(1.0f);
 	std::vector<glm::mat4> boneMatrices;
@@ -377,8 +366,8 @@ void PhysicsSkeletonObject::AnimateNodes(float deltaTime)
 {
 	for (MeshAndMaterial* mesh : meshes)
 	{
-		std::unordered_map<std::string, BoneInfo>& mListOfBoneInfos = mListOfMeshRootNodes[mesh->mesh]->mListOfBoneInfos;
-		std::unordered_map<std::string, HeirarchyNode*>& mListOfNodes = mListOfMeshRootNodes[mesh->mesh]->mListOfNodes;
+		std::unordered_map<std::string, BoneInfo>& mListOfBoneInfos = mListOfMeshRootNodes[mesh->mesh->name]->mListOfBoneInfos;
+		std::unordered_map<std::string, HeirarchyNode*>& mListOfNodes = mListOfMeshRootNodes[mesh->mesh->name]->mListOfNodes;
 
 		//for (int i = 0; i < mCurrentAnimation->Channels.size(); ++i)
 		int i = 0;

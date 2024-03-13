@@ -78,6 +78,7 @@ public:
 		{
 			mIsLocked = isLocked;
 			mRadius = radius;
+			mIsColliding = false;
 
 			mCurrentPosition = CalculatePosition(vertex);
 			InitializeVertexPointer(vertex, mCurrentPosition);
@@ -94,6 +95,8 @@ public:
 
 		bool mIsLocked = false;
 		bool mEnabled = true;
+		bool mIsColliding = false;
+		bool mIsConnected = true;
 		float mRadius = 0;
 
 		glm::vec3 mCurrentPosition = glm::vec3(0);
@@ -146,15 +149,16 @@ public:
 
 	virtual void InitializeSoftBody() = 0;
 
-	virtual void UpdateSoftBody(float deltaTime, CRITICAL_SECTION& criticalSection);
+	virtual void UpdateSoftBody(float deltaTime);
 	virtual void UpdateNodePosition(float deltaTime);
 	virtual void SatisfyConstraints(float deltaTime);
 	virtual void UpdateModelData(float deltaTime);
+	virtual void CreateRandomBracing(int numOfBraces, float distanceBetween);
 
 	virtual void ApplyCollision(float deltaTime);
 	virtual void UpdateBufferData();
 
-	virtual void UpdatModelVertices() = 0;
+	virtual void UpdateModelVertices() = 0;
 	virtual void UpdateModelNormals() = 0;
 
 	virtual void UpdatePositionByVerlet(float deltaTime);

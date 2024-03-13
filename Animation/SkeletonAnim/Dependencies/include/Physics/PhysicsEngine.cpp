@@ -45,6 +45,7 @@ void PhysicsEngine::RemovePhysicsObject(PhysicsObject* physicsObject)
 
 void PhysicsEngine::AddSoftBodyObject(BaseSoftBody* softBody)
 {
+	softBody->mCriticalSection = softBody_CritSection;
 	listOfSoftBodies.push_back(softBody);
 }
 
@@ -57,27 +58,23 @@ void PhysicsEngine::Update(float deltaTime)
 {
 	timer += deltaTime;
 
-	if (softBody_CritSection != nullptr)
-	{
-		EnterCriticalSection(softBody_CritSection);
-		UpdateSoftBodyBufferData();
-		LeaveCriticalSection(softBody_CritSection);
-	}
-
 	if (timer >= fixedStepTime)
 	{
 		UpdatePhysics(fixedStepTime);
+		//UpdateSoftBodies(fixedStepTime);
 
 		timer = 0;
 	}
+
+	UpdateSoftBodyBufferData();
 }
 
-void PhysicsEngine::UpdateSoftBodies(float deltaTime, CRITICAL_SECTION& criticalSection)
+void PhysicsEngine::UpdateSoftBodies(float deltaTime)
 {
-	softBody_CritSection = &criticalSection;
+	//softBody_CritSection = &criticalSection;
 	for (BaseSoftBody* softBody : listOfSoftBodies)
 	{
-		softBody->UpdateSoftBody(deltaTime, criticalSection);
+		softBody->UpdateSoftBody(deltaTime);
 	}
 }
 
@@ -112,7 +109,7 @@ void PhysicsEngine::UpdatePhysics(float deltaTime)
 
 	for (PhysicsObject* iteratorObject : physicsObjects)
 	{
-		if (iteratorObject->isEnabled == false)
+		if (iteratorObject->isPhysicsEnabled == false)
 			continue;
 
 		if (iteratorObject->mode == PhysicsMode::STATIC)
@@ -147,7 +144,7 @@ void PhysicsEngine::UpdatePhysics(float deltaTime)
 
 		for (PhysicsObject* otherObject : physicsObjects)
 		{
-			if (otherObject->isEnabled == false)
+			if (otherObject->isPhysicsEnabled == false)
 				continue;
 
 			if (iteratorObject == otherObject)

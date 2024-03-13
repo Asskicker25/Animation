@@ -1,6 +1,9 @@
 #include "BaseSoftBody.h"
 #include <Graphics/Renderer.h>
 #include <Graphics/Panels/ImguiDrawUtils.h>
+#include <Graphics/MathUtils.h>
+
+using namespace MathUtilities;
 
 void BaseSoftBody::CleanZeros(glm::vec3& value)
 {
@@ -82,13 +85,11 @@ bool BaseSoftBody::ShouldApplyGravity(Node* node)
 	return true;
 }
 
-void BaseSoftBody::UpdateSoftBody(float deltaTime, CRITICAL_SECTION& criticalSection)
+void BaseSoftBody::UpdateSoftBody(float deltaTime)
 {
-	mCriticalSection = &criticalSection;
-
 	UpdateNodePosition(deltaTime);
-	ApplyCollision(deltaTime);
 	UpdatePositionByVerlet(deltaTime);
+	ApplyCollision(deltaTime);
 	SatisfyConstraints(deltaTime);
 	UpdateModelData(deltaTime);
 }
@@ -114,7 +115,7 @@ void BaseSoftBody::UpdateNodePosition(float deltaTime)
 			node->velocity.y = glm::clamp(node->velocity.y, -mNodeMaxVelocity.y, mNodeMaxVelocity.y);
 			node->velocity.z = glm::clamp(node->velocity.z, -mNodeMaxVelocity.z, mNodeMaxVelocity.z);
 		}
-	
+
 		//node->mCurrentPosition += node->velocity * deltaTime;
 
 
@@ -129,15 +130,25 @@ void BaseSoftBody::UpdatePositionByVerlet(float deltaTime)
 {
 	for (Node* node : mListOfNodes)
 	{
+		if (node->mIsLocked) continue;
+
 		glm::vec3 posBeforUpdate = node->mCurrentPosition;
 
-		node->mCurrentPosition += (posBeforUpdate - node->mOldPositionm) + (node->velocity * (deltaTime * deltaTime));
+		if (node->mIsColliding)
+		{
+			node->mCurrentPosition += (node->velocity * deltaTime);
+		}
+		else
+		{
+			node->mCurrentPosition += (posBeforUpdate - node->mOldPositionm) + (node->velocity * (deltaTime * deltaTime));
+		}
+
 		node->mOldPositionm = posBeforUpdate;
 
 		CleanZeros(node->mCurrentPosition);
 		CleanZeros(node->mOldPositionm);
 	}
-	
+
 }
 
 void BaseSoftBody::SatisfyConstraints(float deltaTime)
@@ -157,12 +168,12 @@ void BaseSoftBody::SatisfyConstraints(float deltaTime)
 
 			float diff = (length - stick->mRestLength) / length;
 
-			if (!nodeA->mIsLocked)
+			if (!nodeA->mIsLocked && !nodeA->mIsColliding)
 			{
 				nodeA->mCurrentPosition += delta * 0.5f * diff * mTightness;
 			}
 
-			if (!nodeB->mIsLocked)
+			if (!nodeB->mIsLocked && !nodeB->mIsColliding)
 			{
 				nodeB->mCurrentPosition -= delta * 0.5f * diff * mTightness;
 			}
@@ -189,8 +200,34 @@ void BaseSoftBody::SatisfyConstraints(float deltaTime)
 
 void BaseSoftBody::UpdateModelData(float deltaTime)
 {
-	UpdatModelVertices();
+	UpdateModelVertices();
 	UpdateModelNormals();
+}
+
+void BaseSoftBody::CreateRandomBracing(int numOfBraces, float distanceBetween)
+{
+	int size = mListOfNodes.size() - 1;
+
+	for (int i = 0; i < numOfBraces; i++)
+	{
+		float sqDist = 0;
+
+		Node* nodeA = nullptr;
+		Node* nodeB = nullptr;
+
+		do
+		{
+			nodeA = mListOfNodes[MathUtils::GetRandomIntNumber(0, size)];
+			nodeB = mListOfNodes[MathUtils::GetRandomIntNumber(0, size)];
+
+			glm::vec3 diff = nodeB->mCurrentPosition - nodeA->mCurrentPosition;
+			sqDist = glm::dot(diff, diff);
+
+		} while (sqDist < distanceBetween * distanceBetween);
+
+		Stick* newStick = new Stick(nodeA, nodeB);
+		mListOfSticks.push_back(newStick);
+	}
 }
 
 
@@ -205,7 +242,37 @@ void BaseSoftBody::UpdateBufferData()
 
 void BaseSoftBody::ApplyCollision(float deltaTime)
 {
+
+	//for (Node* node : mListOfNodes)
+	//{
+	//	if (node->mCurrentPosition.y < -5)
+	//	{
+	//		node->mCurrentPosition.y = -5;
+	//		//node->mOldPositionm = node->mCurrentPosition;
+	//	}
+	//}
+
+	//return;
+
+
 	std::vector<glm::vec3> collisionPts, collisionNr;
+
+	for (Node* node : mListOfNodes)
+	{
+		node->mIsColliding = false;
+	}
+
+
+	/*for (Node* node : mListOfNodes)
+	{
+		if (node->mCurrentPosition.y < -5)
+		{
+			node->mIsColliding = true;
+			node->mCurrentPosition.y = -5;
+		}
+	}
+
+	return;*/
 
 	for (PhysicsObject* phyObj : mListOfCollidersToCheck)
 	{
@@ -267,24 +334,20 @@ void BaseSoftBody::ApplyCollision(float deltaTime)
 			for (size_t i = 0; i < collisionPts.size(); i++)
 			{
 
-				if (glm::length(collisionPts[i]) == 0)
-				{
-					collisionPt += (collisionPts[i]);
-				}
-				else
-				{
-					collisionPt += glm::normalize(collisionPts[i]);
-				}
+				collisionPt += (collisionPts[i]);
 			}
 
 			normal = normal / (float)collisionNr.size();
 			collisionPt = collisionPt / (float)collisionPts.size();
 
 			glm::vec3 reflected = glm::reflect(glm::normalize(node->velocity), normal);
-			node->velocity = reflected * (/*iteratorObject->properties.bounciness **/ glm::length(node->velocity));
+			node->velocity = reflected * glm ::length(node->velocity ) * 0.5f;
 			node->velocity *= mBounceFactor;
+			//node->velocity = glm::vec3(0);
 
-			node->mCurrentPosition = collisionPt;
+			//node->mCurrentPosition = collisionPt + ( reflected * node->mRadius);
+			node->mIsColliding = true;
+			//node->mOldPositionm = node->mCurrentPosition;
 
 			LeaveCriticalSection(mCriticalSection);
 		}

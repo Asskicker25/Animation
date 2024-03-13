@@ -64,6 +64,7 @@ public:
 	Shader* alphaBlendShader;
 	Shader* alphaCutOutShader;
 	Shader* defInstanceShader;
+	Shader* skeletalAnimShader;
 
 	Camera* camera = nullptr;
 
