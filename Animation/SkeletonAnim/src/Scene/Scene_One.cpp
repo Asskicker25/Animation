@@ -34,6 +34,11 @@ void Scene_One::Start()
 	floor->transform.SetScale(glm::vec3(50));
 
 	Character* character = new Character();
+	character->Initialize();
+
+	Character* character2 = new Character();
+	character2->CopyFromOther(*character, true);
+	character2->transform.SetPosition(glm::vec3(5, 0, 0));
 
 	AnimationSystem::GetInstance().TogglePlayAndPause();
 }

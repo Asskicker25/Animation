@@ -20,12 +20,18 @@ public:
 	virtual void SetAnimatedRotation(const glm::quat& rotation);
 	virtual void SetAnimatedScale(const glm::vec3& scale);
 	virtual void SetBaseColor(const glm::vec4& color);
+	virtual void OnPropertyDraw();
+
 
 	virtual void Update(float deltaTime) override;
-	void LoadAndAddAnimationClip(const std::string& path, const std::string& animName);
+	void LoadAndAddAnimationClip(const std::string& path, const std::string& animName, bool loop = true);
 	void AnimateNodes(float deltaTime);
 
+
 	void PlayAnimation(const std::string& name);
+
+	SkeletonModel* CopyFromOther(const SkeletonModel& other, bool initialize = false);
+
 
 	bool mIsPlaying = false;
 	float mCurrentTime = 0;

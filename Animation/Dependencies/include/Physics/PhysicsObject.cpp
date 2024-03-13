@@ -150,7 +150,7 @@ void PhysicsObject::OnPropertyDraw()
 	Model::OnPropertyDraw();
 
 
-	ImGui::Checkbox("###PhyObjEnabled", &isEnabled);
+	ImGui::Checkbox("###PhyObjEnabled", &isPhysicsEnabled);
 	ImGui::SameLine();
 	if (!ImGui::TreeNodeEx("Physics Object", ImGuiTreeNodeFlags_DefaultOpen))
 	{

@@ -61,6 +61,9 @@ struct NodeAnim
 struct SkeletalAnimation
 {
 	std::string mName = "Empty";
+
+	bool mLoop = true;
+
 	double mTicksPerSecond = 30;
 	double mDuration = 0;
 

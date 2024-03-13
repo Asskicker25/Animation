@@ -7,6 +7,11 @@ glm::vec3 pos, rot, scale;
 
 Character::Character() : PhysicsSkeletonObject()
 {
+	
+}
+
+void Character::Initialize()
+{
 	shader = Shaders::GetInstance().mBoneAnimationShader;
 	//character->LoadModel("Assets/Models/Character_Idle.fbx");
 	//character->LoadModel("Assets/Models/Ninja.fbx");
@@ -25,7 +30,6 @@ Character::Character() : PhysicsSkeletonObject()
 	//LoadAndAddAnimationClip("Assets/Models/RiggedCube_Anim.fbx", "Test");
 
 	InputManager::GetInstance().AddListener(this);
-	
 }
 
 void Character::OnKeyPressed(const int& key)

@@ -10,6 +10,9 @@ public:
 
 	bool canAnimate = true;
 	bool showEasingColor = false;
+	bool mControlTime = false;
+
+	float mControlTimeParam = 0;
 
 	virtual void SetAnimatedPosition(const glm::vec3& position) = 0;
 	virtual void SetAnimatedRotation(const glm::vec3& rotation) = 0;

@@ -3,6 +3,7 @@
 #include "SkeletonModel.h"
 
 #include <Graphics/MathUtils.h>
+#include <Graphics/Panels/ImguiDrawUtils.h>
 #include <Graphics/Material/UnlitColorMaterial.h>
 
 
@@ -46,17 +47,41 @@ void PhysicsSkeletonObject::SetBaseColor(const glm::vec4& color)
 	}
 }
 
+void PhysicsSkeletonObject::OnPropertyDraw()
+{
+	PhysicsObject::OnPropertyDraw();
+
+	if (!ImGui::TreeNodeEx("Animation", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		return;
+	}
+
+	ImGuiUtils::DrawBool("EnableControlTime", mControlTime);
+	ImGuiUtils::DrawDragFloat("ControlTime", mControlTimeParam, 0.001f, 0, 1);
+
+	ImGui::TreePop();
+
+}
+
 void PhysicsSkeletonObject::Update(float deltaTime)
 {
 	if (!mIsPlaying) return;
 
 	if (deltaTime > 1.0f / 60.0f) { deltaTime = 1.0f / 60.0f; }
 
-	mCurrentTime += deltaTime * 1000;
-
-	if (mCurrentTime > mCurrentAnimation->mDuration)
+	if (!mControlTime)
 	{
-		mCurrentTime = 0;
+		mCurrentTime += deltaTime * 1000;
+
+		if (mCurrentAnimation->mLoop && mCurrentTime > mCurrentAnimation->mDuration)
+		{
+			mCurrentTime = 0;
+		}
+
+	}
+	else
+	{
+		mCurrentTime = MathUtils::Remap(mControlTimeParam, 0, 1, 0, mCurrentAnimation->mDuration);
 	}
 
 	//Debugger::Print("Current Time :", mCurrentTime);
@@ -64,11 +89,13 @@ void PhysicsSkeletonObject::Update(float deltaTime)
 	AnimateNodes(deltaTime);
 }
 
-void PhysicsSkeletonObject::LoadAndAddAnimationClip(const std::string& path, const std::string& animName)
+void PhysicsSkeletonObject::LoadAndAddAnimationClip(const std::string& path, const std::string& animName, bool loop)
 {
 	Assimp::Importer importer;
 
 	SkeletalAnimation* newAnimation = new SkeletalAnimation();
+
+	newAnimation->mLoop = loop;
 
 	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate);
 	assert(scene && scene->mAnimations[0]);
@@ -400,4 +427,19 @@ void PhysicsSkeletonObject::PlayAnimation(const std::string& name)
 {
 	mCurrentAnimation = mListOfSkeletalAnimations[name];
 	mCurrentTime = 0;
+}
+
+PhysicsSkeletonObject* PhysicsSkeletonObject::CopyFromOther(const PhysicsSkeletonObject& other, bool initialize)
+{
+	CopyFromModel(other, initialize);
+
+	this->mIsPlaying = other.mIsPlaying;
+	this->mCurrentTime = other.mCurrentTime;
+	this->mControlTime = other.mControlTime;
+	this->mControlTimeParam = other.mControlTimeParam;
+	this->mCurrentAnimation = other.mCurrentAnimation;
+	this->mListOfMeshRootNodes = other.mListOfMeshRootNodes;
+	this->mListOfSkeletalAnimations = other.mListOfSkeletalAnimations;
+
+	return this;
 }

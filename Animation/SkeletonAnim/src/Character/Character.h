@@ -9,6 +9,7 @@ class Character : public PhysicsSkeletonObject, public iInputListener
 {
 public:
 	Character();
+	void Initialize();
 	virtual void OnKeyPressed(const int& key);
 
 };

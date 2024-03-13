@@ -44,6 +44,7 @@ private:
 public:
 
 	bool initialized = false;
+	bool isPhysicsEnabled = true;
 	bool isCollisionInvoke = false;
 	bool useBvh = true;
 	float maxDepth = 10;
