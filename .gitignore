@@ -396,3 +396,17 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+
+#lib files
+
+!Animation/
+Animation/*
+!Animation/x64/
+Animation/x64/*
+!Animation/x64/Debug/
+Animation/x64/Debug/*
+!Animation/x64/Debug/Animation.lib
+!Animation/x64/Release/
+Animation/x64/Release/*
+!Animation/x64/Release/Animation.lib
