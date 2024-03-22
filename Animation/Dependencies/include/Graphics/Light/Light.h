@@ -17,8 +17,6 @@ private:
 	Material material;
 
 public:
-	bool isActive = true;
-
 	LightType lightType;
 
 	glm::vec4 attenuation;

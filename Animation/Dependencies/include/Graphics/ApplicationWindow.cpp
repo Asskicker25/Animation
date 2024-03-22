@@ -264,6 +264,8 @@ void ApplicationWindow::MainLoop()
 
 	Timer::GetInstance().lastFrameTime = glfwGetTime();
 
+	LightManager::GetInstance().Initialize();
+
 	while (!glfwWindowShouldClose(window))
 	{
 		EngineUpdate();
