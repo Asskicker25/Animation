@@ -21,8 +21,8 @@ out vec4 color;
 in vec2 TexCoords;
 
 uniform float iTime;
-uniform sampler2D sceneTexture;
 uniform float amount;
+uniform sampler2D sceneTexture;
 
 float noise(float x)
 {
@@ -43,11 +43,10 @@ void main()
     vec2 dst_offset = dst_map_val.xy;
 
     dst_offset -= vec2(0.5, 0.5);
-    dst_offset *= 2;
+    dst_offset *= amount;
     dst_offset *= 0.01;
 
     dst_offset *= (1.0 - p_m.t);
-    dst_offset *= amount;
 
     vec2 dist_tex_coord = p_m.st + dst_offset;
     

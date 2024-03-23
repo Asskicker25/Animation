@@ -13,7 +13,6 @@ struct ShaderSource
 class Shader : public Object
 {
 private:
-	unsigned int shaderId;
 	std::unordered_map <std::string, int> cachedLocations;
 	int GetLocation(const std::string& property);
 
@@ -32,6 +31,8 @@ public:
 		ALPHA_BLEND = 2,
 		ALPHA_CUTOUT = 3
 	};
+
+	unsigned int shaderId;
 
 	BlendMode blendMode;
 

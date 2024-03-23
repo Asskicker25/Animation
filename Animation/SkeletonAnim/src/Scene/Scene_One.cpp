@@ -33,20 +33,18 @@ void Scene_One::Start()
 	floor->transform.SetRotation(glm::vec3(90,0,0));
 	floor->transform.SetScale(glm::vec3(50));
 
+	PhysX_Object* sphere = new PhysX_Object();
+	sphere->LoadModel("res/Models/DefaultSphere.fbx");
+	sphere->transform.SetPosition(glm::vec3(0, 5, 0));
+	sphere->InitializePhysics(RigidBody::STATIC, BaseColliderShape::SPHERE);
+
 	Character* character = new Character();
 	character->Initialize();
 
 
-	Character* character2 = new Character();
-	character2->Initialize();
+	/*Character* character2 = new Character();
+	character2->Initialize();*/
 
-	character->OnModelLoaded = [this, character](Model* self)
-		{
-			Character* character2 = new Character();
-			character2->CopyFromOther(*character, true);
-			character2->transform.SetPosition(glm::vec3(5, 0, 0));
-		};
-	
 
 	AnimationSystem::GetInstance().TogglePlayAndPause();
 }

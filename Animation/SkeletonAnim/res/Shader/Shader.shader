@@ -46,10 +46,27 @@ struct Material
 	float shininess;
 };
 
+out vec4 color;
+
+in vec2 TexCoord;
+in vec3 Normal;
+in vec3 FragPos;
+in vec4 VertexColor;
+in vec4 BoneId;
+
+uniform Material material;
+
+const int POINT_LIGHT_TYPE = 0;
+const int SPOT_LIGHT_TYPE = 1;
+const int DIRECTIONAL_LIGHT_TYPE = 2;
+
+const int NUMBEROFLIGHTS = 10;
+
+
 struct Light
 {
-	vec3 position;
-	vec3 direction;
+	vec4 position;
+	vec4 direction;
 	vec4 baseColor;
 	vec4 ambientColor;
 	vec4 atten;								// x = constant, y = linear, z = quadratic, w = DistanceCutOff
@@ -60,22 +77,12 @@ struct Light
 	vec4 param2;							// x = 0 for off, 1 for on
 };
 
-out vec4 color;
 
-in vec2 TexCoord;
-in vec3 Normal;
-in vec3 FragPos;
-in vec4 VertexColor;
-
-uniform Material material;
-
-const int POINT_LIGHT_TYPE = 0;
-const int SPOT_LIGHT_TYPE = 1;
-const int DIRECTIONAL_LIGHT_TYPE = 2;
-
-const int NUMBEROFLIGHTS = 10;
-
-uniform Light[NUMBEROFLIGHTS] lights;
+//uniform Light[NUMBEROFLIGHTS] lights;
+uniform lightDataNUB
+{
+	Light lights[NUMBEROFLIGHTS];  
+} lightInfo;
 
 //uniform vec3 ambient_Specular;
 //uniform vec3 lightColor;
@@ -127,8 +134,7 @@ void main()
 			discard;
 		}
 	}
-	
-	
+
 	color = result;
 	
 };
@@ -147,35 +153,36 @@ vec4 CalculateLightContrib(vec3 normal, vec3 fragPos, vec3 viewDir )
 	
 	for(int i = 0; i < NUMBEROFLIGHTS; i++)
 	{
-		if(lights[i].param2.x == 0.0)
+		if(lightInfo.lights[i].param2.x == 0.0)
 		{
 			continue; 			//Light is off
 		}
 		
 	
 		//Ambient
-		vec4 ambientColor = lights[i].ambientColor * material.ambientColor;
+		vec4 ambientColor = lightInfo.lights[i].ambientColor * material.ambientColor;
 		ambientColor *= texColor;
 		
-		int type = int(lights[i].type_innerAngle_outerAngle_w.x);
+		int type = int(lightInfo.lights[i].type_innerAngle_outerAngle_w.x);
 		
 		if(type == POINT_LIGHT_TYPE)
 		{
-				result += CalcPointLight(lights[i], texColor, ambientColor, normal,FragPos, viewDir);
+				result += CalcPointLight(lightInfo.lights[i], texColor, ambientColor, normal,FragPos, viewDir);
 		}
 		else if(type == SPOT_LIGHT_TYPE)
 		{
-			result += CalcSpotLight(lights[i], texColor, ambientColor, normal, FragPos, viewDir);
+			result += CalcSpotLight(lightInfo.lights[i], texColor, ambientColor, normal, FragPos, viewDir);
 		}
 		else if(type == DIRECTIONAL_LIGHT_TYPE)
 		{
-			result += CalcDirLight(lights[i], texColor, ambientColor, normal, viewDir);
+			result += CalcDirLight(lightInfo.lights[i], texColor, ambientColor, normal, viewDir);
 		}
 	}
 	
 	if(alphaCutOut.y == 1)
 	{
 		result.w = texture(texture_opacity, TexCoord).r;
+		//result.w += 0.05;
 	}
 	else
 	{
@@ -190,7 +197,7 @@ vec4 CalcDirLight(Light light, vec4 texColor, vec4 ambientColor, vec3 normal, ve
 {
 	//Diffuse
 	
-	vec3 lightDir = normalize(- light.direction);
+	vec3 lightDir = normalize(- light.direction.xyz);
 	float diffValue = max(dot(normal,lightDir),0.0);
 	
 	vec4 diffuse = diffValue * light.baseColor;
@@ -213,7 +220,7 @@ vec4 CalcPointLight(Light light, vec4 texColor, vec4 ambientColor, vec3 normal, 
 	//Attenuation 
 	// x = constant, y = linear, z = quadratic, w = DistanceCutOff
 	
-	float _distance = length(light.position - fragPos);
+	float _distance = length(light.position.xyz - fragPos);
     float attenuation = 1.0 / (light.atten.x + light.atten.y * _distance + light.atten.z * (_distance * _distance));   
 	
 	//Ambient
@@ -221,7 +228,7 @@ vec4 CalcPointLight(Light light, vec4 texColor, vec4 ambientColor, vec3 normal, 
 	
 	//Diffuse
 	
-	vec3 lightDir = normalize(light.position - fragPos);
+	vec3 lightDir = normalize(light.position.xyz - fragPos);
 	float diffValue = max(dot(normal,lightDir),0.0);
 	vec4 diffuse = diffValue * light.baseColor;
 	diffuse *= texColor * attenuation;
@@ -244,16 +251,16 @@ vec4 CalcSpotLight(Light light, vec4 texColor, vec4 ambientColor, vec3 normal, v
 	//Attenuation 
 	// x = constant, y = linear, z = quadratic, w = DistanceCutOff
 	
-	vec3 lightDir = normalize(light.position - fragPos);
+	vec3 lightDir = normalize(light.position.xyz - fragPos);
 	
-	float _distance = length(light.position - fragPos);
+	float _distance = length(light.position.xyz - fragPos);
     float attenuation = 1.0 / (light.atten.x + light.atten.y * _distance + light.atten.z * (_distance * _distance));   
 	
 	// spotlight intensity
 	float outerConeAngleCos = cos(radians(light.type_innerAngle_outerAngle_w.z));
 	float innerConeAngleCos = cos(radians(light.type_innerAngle_outerAngle_w.y));
 	
-    float theta = dot(lightDir, normalize(-light.direction)); 
+    float theta = dot(lightDir, normalize(-light.direction.xyz)); 
     float epsilon = innerConeAngleCos - outerConeAngleCos;
     float intensity = clamp((theta - outerConeAngleCos) / epsilon, 0.0, 1.0);
 	

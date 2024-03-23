@@ -9,7 +9,7 @@
 
 using namespace MathUtilities;
 
-PhysicsSkeletonObject::PhysicsSkeletonObject() : PhysicsObject()
+PhysicsSkeletonObject::PhysicsSkeletonObject() : PhysX_Object()
 {
 	//AnimationSystem::GetInstance().AddAnimatedObject(this);
 }
@@ -49,7 +49,7 @@ void PhysicsSkeletonObject::SetBaseColor(const glm::vec4& color)
 
 void PhysicsSkeletonObject::OnPropertyDraw()
 {
-	PhysicsObject::OnPropertyDraw();
+	PhysX_Object::OnPropertyDraw();
 
 	if (!ImGui::TreeNodeEx("Animation", ImGuiTreeNodeFlags_DefaultOpen))
 	{

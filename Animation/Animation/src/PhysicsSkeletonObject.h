@@ -1,11 +1,11 @@
 #pragma once
 #pragma once
-#include <Physics/PhysicsObject.h>
+#include <Physics/PhysX_Object.h>
 #include "SkeletonData.h"
 
 #include "BaseAnimationHelper.h"
 
-class PhysicsSkeletonObject : public PhysicsObject, public BaseAnimationHelper
+class PhysicsSkeletonObject : public PhysX_Object, public BaseAnimationHelper
 {
 public:
 	PhysicsSkeletonObject();

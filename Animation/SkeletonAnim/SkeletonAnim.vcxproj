@@ -71,12 +71,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)Animation\src;$(ProjectDir)Dependencies/include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Animation\src;$(ProjectDir)Dependencies\include\PhysX;$(ProjectDir)Dependencies/include;$(IncludePath)</IncludePath>
     <LibraryPath>$(OutDir);$(ProjectDir)Dependencies\lib\Debug_assimp;$(ProjectDir)Dependencies\lib\glfw\$(Configuration)_x64;$(ProjectDir)Dependencies\lib\Physics\$(Configuration);$(ProjectDir)Dependencies\lib\Graphics\$(Configuration);$(LibraryPath)</LibraryPath>
     <ExternalIncludePath>$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)Animation\src;$(ProjectDir)Dependencies/include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Animation\src;$(ProjectDir)Dependencies\include\PhysX;$(ProjectDir)Dependencies/include;$(IncludePath)</IncludePath>
     <LibraryPath>$(OutDir);$(ProjectDir)Dependencies\lib\Debug_assimp;$(ProjectDir)Dependencies\lib\glfw\$(Configuration)_x64;$(ProjectDir)Dependencies\lib\Physics\$(Configuration);$(ProjectDir)Dependencies\lib\Graphics\$(Configuration);$(LibraryPath)</LibraryPath>
     <ExternalIncludePath>$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
@@ -118,7 +118,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;assimp-vc143-mtd.lib;glfw3.lib;Graphics.lib;Animation.lib;Physics.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;assimp-vc143-mtd.lib;glfw3.lib;Graphics.lib;Animation.lib;PhysX_Physics.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -135,7 +135,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;assimp-vc143-mtd.lib;glfw3.lib;Graphics.lib;Animation.lib;Physics.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;assimp-vc143-mtd.lib;glfw3.lib;Graphics.lib;Animation.lib;PhysX_Physics.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
