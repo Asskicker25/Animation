@@ -28,19 +28,16 @@ void Scene_One::Start()
 	mDirLight->InitializeLight(Directional);
 	mDirLight->intensity = 0.7;
 
-	Model* floor = new Model("res/Models/DefaultQuad.fbx");
-	floor->transform.SetPosition(glm::vec3(0));
-	floor->transform.SetRotation(glm::vec3(90,0,0));
-	floor->transform.SetScale(glm::vec3(50));
-
-	PhysX_Object* sphere = new PhysX_Object();
-	sphere->LoadModel("res/Models/DefaultSphere.fbx");
-	sphere->transform.SetPosition(glm::vec3(0, 5, 0));
-	sphere->InitializePhysics(RigidBody::STATIC, BaseColliderShape::SPHERE);
+	PhysX_Object* floor = new PhysX_Object();
+	floor->LoadModel("res/Models/DefaultCube.fbx");
+	floor->transform.SetPosition(glm::vec3(0, -0.4f, 0));
+	floor->transform.SetRotation(glm::vec3(0, 0, 0));
+	floor->transform.SetScale(glm::vec3(50,0.1,50));
+	floor->InitializePhysics(RigidBody::KINEMATIC, BaseColliderShape::BOX);
 
 	Character* character = new Character();
+	character->name = "Character";
 	character->Initialize();
-
 
 	/*Character* character2 = new Character();
 	character2->Initialize();*/
@@ -60,5 +57,5 @@ void Scene_One::Render()
 
 void Scene_One::ShutDown()
 {
-	
+
 }

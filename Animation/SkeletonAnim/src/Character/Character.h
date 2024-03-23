@@ -11,6 +11,8 @@ public:
 	Character();
 	void Initialize();
 	virtual void OnKeyPressed(const int& key);
+	virtual void Start();
+	virtual void Update(float deltaTime) override;
 
 };
 

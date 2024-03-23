@@ -20,17 +20,23 @@ void Character::Initialize()
 	//character->LoadModel("Assets/Models/Ninja.fbx");
 	//LoadModel("Assets/Models/RiggedCube_Anim.fbx");
 
-	OnModelLoaded = [this](Model* self)
+	/*OnModelLoaded = [this](Model* self)
 		{
-			InitializePhysics(RigidBody::DYNAMIC, BaseColliderShape::SPHERE);
-			mColliderShape->AsSphere()->SetRadius(1);
-			//mColliderShape->AsCapsule()->mHeight = 10;
-		};
+		
+		};*/
 
-	LoadModelAsync("Assets/Models/Player.fbx");
+	LoadModel("Assets/Models/Player.fbx");
+	//mColliderShape->SetPositionOffset(glm::vec3(0, 8, 0));
+	//mColliderShape->AsCapsule()->SetRadius(2);
+	//mColliderShape->AsCapsule()->SetHeight(12);
 	InputManager::GetInstance().AddListener(this);
 	transform.SetScale(glm::vec3(0.08f));
+	InitializePhysics(RigidBody::DYNAMIC, BaseColliderShape::BOX);
+	mColliderShape->SetPositionOffset(glm::vec3(0, 7.f, 0));
+
 	LoadAndAddAnimationClip("Assets/Animations/Player_Run.fbx", "Taunt");
+
+	mRigidBody.mRotationConstraints = RigidBody::AxisConstraints(true, true, true);
 }
 
 void Character::OnKeyPressed(const int& key)
@@ -59,4 +65,21 @@ void Character::OnKeyPressed(const int& key)
 	{
 		PlayAnimation("Stretching");
 	}
+}
+
+void Character::Start()
+{
+	SetVelocity(glm::vec3(0, GetVelocity().y, 0));
+}
+
+void Character::Update(float deltaTime)
+{
+	PhysX_Object::Update(deltaTime);
+	glm::vec2 dir;
+	float speed = 2;
+
+	dir.x = InputManager::GetInstance().GetAxisX();
+	
+	transform.rotation.y += dir.x * speed;
+	transform.SetRotation(transform.rotation);
 }
