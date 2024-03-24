@@ -1,9 +1,9 @@
 #include "SkeletonModel.h"
 #include "AnimationSystem.h"
 
-#include <Graphics/MathUtils.h>
-#include <Graphics/Panels/ImguiDrawUtils.h>
-#include <Graphics/Material/UnlitColorMaterial.h>
+#include <MathUtils.h>
+#include <Panels/ImguiDrawUtils.h>
+#include <Material/UnlitColorMaterial.h>
 
 
 using namespace MathUtilities;

@@ -1,6 +1,6 @@
 #pragma once
 #pragma once
-#include <Physics/PhysX_Object.h>
+#include <PhysX_Object.h>
 #include "SkeletonData.h"
 
 #include "BaseAnimationHelper.h"

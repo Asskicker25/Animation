@@ -1,5 +1,5 @@
 #pragma once
-#include <Graphics/Mesh/Model.h>
+#include <Mesh/Model.h>
 #include "SkeletonData.h"
 
 #include "BaseAnimationHelper.h"

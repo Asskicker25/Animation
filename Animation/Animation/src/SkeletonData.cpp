@@ -1,5 +1,5 @@
 #include "SkeletonData.h"
-#include <Graphics/MathUtils.h>
+#include <MathUtils.h>
 #include "BaseKeyFrame.h"
 
 using namespace MathUtilities;
