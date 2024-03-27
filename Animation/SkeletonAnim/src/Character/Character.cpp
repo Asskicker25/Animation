@@ -74,7 +74,7 @@ void Character::Start()
 
 void Character::Update(float deltaTime)
 {
-	PhysX_Object::Update(deltaTime);
+	PhysicsSkeletonObject::Update(deltaTime);
 	glm::vec2 dir;
 	float speed = 2;
 
